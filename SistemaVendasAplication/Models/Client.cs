@@ -16,7 +16,7 @@ namespace SistemaVendasAplication.Models
         [StringLength(50,MinimumLength = 2, ErrorMessage = "Minimo de 2 caracteris e o máximo de 10 caracteris")]
         public string? ShotName { get; set; }
 
-        [DataType(DataType.Date)]
+        [DataType(DataType.Date)]z
         public DateTime? DueDate{ get; set; }
 
         [Required(ErrorMessage = "O Campo RG é obrigatório!")]
