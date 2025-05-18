@@ -62,5 +62,10 @@ namespace SistemaVendasAplication.Models
         [Required(ErrorMessage = "Estado é obrigatório")]
         [StringLength(150, MinimumLength = 3, ErrorMessage = "O minino de caracteris é 2 e o maximo é 150")]
         public string State { get; set; }
+
+        public Client()
+        {
+            Id = Guid.NewGuid();
+        }
     }
 }
