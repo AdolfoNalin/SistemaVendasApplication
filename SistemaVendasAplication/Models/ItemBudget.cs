@@ -5,15 +5,21 @@ namespace SistemaVendasAplication.Models
 {
     public class ItemBudget : ItemSale
     {
-        [Required]
+        [Required(ErrorMessage = "É necessário ter o Orçamento")]
         public Guid IdBudget { get; set; }
 
-        [Required]
-        public Guid Product { get; set; }
+        [Required(ErrorMessage = "É necessário ter o Produto")]
+        public Guid IdProduct { get; set; }
 
         public ItemBudget()
         {
             Id = Guid.NewGuid();
         }
+
+        [JsonIgnore]
+        public Budget? Budget { get; set; }
+
+        [JsonIgnore]
+        public Product? Product { get; set; }
     }
 }
