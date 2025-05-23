@@ -30,13 +30,13 @@ namespace SistemaVendasAplication.Models
         [Column(TypeName = "decimal(10,2)")]
         public decimal AdditionCash { get; set; }
 
-        [Column(TypeName = "deciaml(10,2)")]
+        [Column(TypeName = "decimal(10,2)")]
         public decimal Total { get; set; }
 
-        [Column(TypeName = "deciaml(10,2)")]
+        [Column(TypeName = "decimal(10,2)")]
         public decimal Subtotal { get; set; }
 
-        [Column(TypeName = "deciaml(10,2)")]
+        [Column(TypeName = "decimal(10,2)")]
         public decimal Changes { get; set; }
 
         [Required(ErrorMessage = "É necessário de data válida")]
