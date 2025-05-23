@@ -4,6 +4,8 @@ packages/
 *.nupkg
 *.cache
 *.log
+*.csproj
+*.user
 appsettings.Development.json
 usersecrets.json
 TestResults/
