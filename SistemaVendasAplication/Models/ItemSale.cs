@@ -20,7 +20,7 @@ namespace SistemaVendasAplication.Models
         public double Amount { get; set; }
 
         [Required(ErrorMessage = "Subtotal é obrigatório")]
-        [Column(TypeName = "descimal(10,2)")]
+        [Column(TypeName = "decimal(10,2)")]
         public decimal Subtotal { get; set; }
 
         public ItemSale()

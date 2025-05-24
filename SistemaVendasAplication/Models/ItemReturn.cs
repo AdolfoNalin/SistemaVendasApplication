@@ -21,7 +21,7 @@ namespace SistemaVendasAplication.Models
         public Guid IdProduct { get; set; }
 
         [Required(ErrorMessage = "Quantidade é obrigatório")]
-        [Column(TypeName = "decimal(10,2)")]
+        [Column(TypeName = "decimal(10,2)   ")]
         public double Amount { get; set; }
 
         [Required(ErrorMessage = "Motivo é obrigatório")]
