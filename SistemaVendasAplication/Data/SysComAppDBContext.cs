@@ -5,11 +5,6 @@ namespace SistemaVendasAplication.Data
 {
     public class SysComAppDBContext : DbContext
     {
-        public SysComAppDBContext(DbContextOptions<SysComAppDBContext> options) : base(options)
-        {
-            
-        }
-
         public DbSet<Client> Client { get; set; }
         public DbSet<Budget> Budget { get; set; }
         public DbSet<Supplier> Supplier { get; set; }
@@ -19,5 +14,10 @@ namespace SistemaVendasAplication.Data
         public DbSet<ItemBudget> ItemBudget { get; set; }
         public DbSet<ItemSale> ItemSale { get; set; }
         public DbSet<ItemReturn> ItemReturn { get; set; }
+
+        public SysComAppDBContext(DbContextOptions<SysComAppDBContext> options) : base(options)
+        {
+            
+        }
     }
 }
