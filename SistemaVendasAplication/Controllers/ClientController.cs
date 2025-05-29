@@ -152,6 +152,7 @@ namespace SistemaVendasAplication.Controllers
                 }
                 else if (await _context.Client.AnyAsync(c => c.CPF.Contains(client.CPF)))
                 {
+                    client.DueDate = client.DueDate.ToUniversalTime();
                     _context.Client.Update(client);
                     int value = await _context.SaveChangesAsync();
 
