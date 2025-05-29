@@ -127,7 +127,7 @@ namespace SistemaVendasAplication.Controllers
             }
             catch (DbUpdateException ue)
             {
-                return BadRequest($"{ue.InnerException.Message}, {ue.StackTrace}, {ue.HelpLink}"); 
+                return BadRequest($"{ue.Message}, {ue.StackTrace}, {ue.HelpLink}"); 
             }
             catch (ArgumentNullException ane)
             {
