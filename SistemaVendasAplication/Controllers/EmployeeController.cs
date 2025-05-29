@@ -7,8 +7,8 @@ using SistemaVendasAplication.Models;
 namespace SistemaVendasAplication.Controllers
 {
     [ApiController]
-    [Route("api/[Contoller]")]
-    [Authorize]
+    [Route("api/[controller]")]
+    //[Authorize]
     public class EmployeeController : Controller
     {
         private SysComAppDBContext _context;
@@ -41,7 +41,8 @@ namespace SistemaVendasAplication.Controllers
         #endregion
 
         #region GetId
-        [HttpGet("[id]")]
+        [HttpGet]
+        [Route("{id}")]
         public async Task<IActionResult> Get([FromRoute] Guid id)
         {
             try
@@ -62,7 +63,7 @@ namespace SistemaVendasAplication.Controllers
         #endregion
 
         #region GetString
-        [HttpGet("[value]")]
+        [HttpGet("{value}")]
         public async Task<IActionResult> Get([FromRoute] string value)
         {
             try
@@ -100,6 +101,7 @@ namespace SistemaVendasAplication.Controllers
                 }
                 else if (employee != null && await _context.Employee.AnyAsync(e => e.CPF.Contains(employee.CPF)) == false)
                 {
+                    employee.DueDate = employee.DueDate.ToUniversalTime();
                     await _context.Employee.AddAsync(employee);
                     int value = await _context.SaveChangesAsync();
                     
@@ -148,6 +150,7 @@ namespace SistemaVendasAplication.Controllers
                 }
                 else if (await _context.Employee.AnyAsync(e => e.CPF == employee.CEP) && employee != null) 
                 {
+                    employee.DueDate = employee.DueDate.ToUniversalTime();
                     _context.Employee.Update(employee);
                     int value = await _context.SaveChangesAsync();
 
@@ -181,7 +184,7 @@ namespace SistemaVendasAplication.Controllers
         #endregion
 
         #region Delete
-        [HttpDelete("[id]")]
+        [HttpDelete]
         public async Task<IActionResult> Delete([FromBody] Employee employee)
         {
             try
