@@ -21,7 +21,7 @@ namespace SistemaVendasAplication.Models
         public DateTime DueDate{ get; set; }
 
         [Required(ErrorMessage = "O Campo RG é obrigatório!")]
-        [StringLength(12, MinimumLength = 12, ErrorMessage = "Verifique se tudos os caracteris estão certos!")]
+        [StringLength(12, MinimumLength = 12, ErrorMessage = "Verifique se todos os numeros estão corretos")]
         public string RG { get; set; }
 
         [Required(ErrorMessage = "O Campo CPF é obrigatório!")]
@@ -35,7 +35,6 @@ namespace SistemaVendasAplication.Models
 
         [Required(ErrorMessage = "Número de celular é obrigatório")]
         [StringLength(14, MinimumLength = 14, ErrorMessage = "Verifique se todos os números estão certos!")]
-        [DataType(DataType.PhoneNumber)]
         public string PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "CEP é obrigatótio!")]
