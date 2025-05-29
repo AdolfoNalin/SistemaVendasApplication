@@ -28,9 +28,8 @@ namespace SistemaVendasAplication.Models
         [StringLength(14,MinimumLength = 14, ErrorMessage = "Verifique se todos os caracteris estão certos!")]
         public string CPF { get; set; }
 
-        [Required]
         [DataType(DataType.EmailAddress)]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         public string? TelephoneNumber { get; set; }
 

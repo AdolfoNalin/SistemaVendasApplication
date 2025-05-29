@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Reflection.Metadata;
+using System.Text.Json.Serialization;
 
 namespace SistemaVendasAplication.Models
 {
@@ -16,27 +17,23 @@ namespace SistemaVendasAplication.Models
         public string? ShotName { get; set; }
 
         [DataType(DataType.Date)]
-        public DateTime? DueDate { get; set; }
+        public DateTime DueDate { get; set; }
 
         [Required(ErrorMessage = "O Campo RG é obrigatório!")]
-        [StringLength(15, MinimumLength = 15, ErrorMessage = "O minimo e o maximo é de 15 caracteris")]
+        [StringLength(12, MinimumLength = 12, ErrorMessage = "Verifique se todos os numeros estão corretos")]
         public string RG { get; set; }
 
         [Required(ErrorMessage = "O Campo CPF é obrigatório!")]
-        [StringLength(12, MinimumLength = 12, ErrorMessage = "O minimo e o maximo é de 12 caracteris")]
+        [StringLength(14, MinimumLength = 14, ErrorMessage = "Verifique se todos os numeros estão corretos")]
         public string CPF { get; set; }
 
-        [Required]
         [DataType(DataType.EmailAddress)]
-        public string Email { get; set; }
-
-        [StringLength(9, MinimumLength = 9, ErrorMessage = "Verifique se todos os números estão certos!")]
-        [DataType(DataType.PhoneNumber)]
-        public string TelephoneNumber { get; set; }
+        public string? Email { get; set; }
+        
+        public string? TelephoneNumber { get; set; }
 
         [Required(ErrorMessage = "Número de celular é obrigatório")]
-        [StringLength(9, MinimumLength = 9, ErrorMessage = "Verifique se todos os números estão certos!")]
-        [DataType(DataType.PhoneNumber)]
+        [StringLength(14, MinimumLength = 14, ErrorMessage = "Verifique se todos os números estão certos!")]
         public string PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "CEP é obrigatótio!")]
@@ -51,7 +48,6 @@ namespace SistemaVendasAplication.Models
         [StringLength(150, MinimumLength = 3, ErrorMessage = "O minino de caracteris é 2 e o maximo é 150")]
         public string Street { get; set; }
 
-        [StringLength(12, MinimumLength = 0, ErrorMessage = "O minino de caracteris é 0 e o maximo 0")]
         public int? Number { get; set; }
 
         [Required(ErrorMessage = "Bairro é obrigatório")]
@@ -73,9 +69,13 @@ namespace SistemaVendasAplication.Models
         [Required(ErrorMessage = "A Lista de aturização é obrigatório")]
         public List<string> Authorizations { get; set; }
 
+        [JsonIgnore]
+        private readonly DateTime Date;
+
         public Employee()
         {
             Id = Guid.NewGuid();
+            DueDate = Date.ToUniversalTime();
         }
     }
 }
