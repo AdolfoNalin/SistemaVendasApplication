@@ -44,9 +44,8 @@ namespace SistemaVendasAplication.Controllers
         #endregion
 
         #region GetId
-        [HttpGet]
-        [Route("{id}")]
-        public async Task<IActionResult> Get([FromRoute] Guid id)
+        [HttpGet("search/{id}")]
+        public async Task<IActionResult> GetId([FromRoute] Guid id)
         {
             try
             {
@@ -68,7 +67,7 @@ namespace SistemaVendasAplication.Controllers
 
         #region GetString
         [HttpGet]
-        [Route("{value}")]
+        [Route("smart/{value}")]
         public async Task<IActionResult> Get([FromRoute] string value)
         {
             try
