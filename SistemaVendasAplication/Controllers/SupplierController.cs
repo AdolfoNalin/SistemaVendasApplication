@@ -53,6 +53,7 @@ namespace SistemaVendasAplication.Controllers
         {
             try
             {
+            
                 List<Supplier> suppliers = await _context.Supplier.Where<Supplier>(s => s.Id == id).OrderBy(s => s.Name).ToListAsync()
                 ?? throw new ArgumentNullException("Lista está vazia");
 
@@ -66,16 +67,24 @@ namespace SistemaVendasAplication.Controllers
         #endregion
 
         #region GetString
-        [HttpGet("smart/{value}")]
+        [HttpGet]
+        [Route("smart/{value}")]
         public async Task<IActionResult> Get([FromRoute] string value)
         {
             try
             {
-                List<Supplier> suppliers = await _context.Supplier.Where<Supplier>(s => s.Name.ToUpper().Contains(value) || s.ShotName.ToUpper().Contains(value)
-                || s.CNPJ.Contains(value) || s.CPF.Contains(value)).OrderBy(s => s.Name).ToListAsync() ??
-                throw new ArgumentNullException("Lista está nula");
+                if (value is null || value == String.Empty)
+                {
+                    throw new ArgumentNullException("Arguemnto nulo");
+                }
+                else
+                {
+                    List<Supplier> suppliers = await _context.Supplier.Where<Supplier>(s => s.Name.ToUpper().Contains(value.ToUpper()) || s.ShotName.ToUpper().Contains(value.ToUpper())
+                    || s.CNPJ.Contains(value) || s.CPF.Contains(value)).OrderBy(s => s.Name).ToListAsync() ??
+                    throw new ArgumentException("Lista está nula");
 
-                return Ok(suppliers);
+                    return Ok(suppliers);
+                }
             }
             catch (ArgumentNullException ane)
             {
