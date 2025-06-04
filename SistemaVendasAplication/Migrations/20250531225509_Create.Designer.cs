@@ -13,8 +13,8 @@ using SistemaVendasAplication.Data;
 namespace SistemaVendasAplication.Migrations
 {
     [DbContext(typeof(SysComAppDBContext))]
-    [Migration("20250529004318_UpdateEntityEmployeeAndClient")]
-    partial class UpdateEntityEmployeeAndClient
+    [Migration("20250531225509_Create")]
+    partial class Create
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -108,7 +108,6 @@ namespace SistemaVendasAplication.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
@@ -173,19 +172,18 @@ namespace SistemaVendasAplication.Migrations
 
                     b.Property<string>("CPF")
                         .IsRequired()
-                        .HasMaxLength(12)
-                        .HasColumnType("character varying(12)");
+                        .HasMaxLength(14)
+                        .HasColumnType("character varying(14)");
 
                     b.Property<string>("City")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("character varying(150)");
 
-                    b.Property<DateTime?>("DueDate")
+                    b.Property<DateTime>("DueDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Login")
@@ -213,13 +211,13 @@ namespace SistemaVendasAplication.Migrations
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasMaxLength(9)
-                        .HasColumnType("character varying(9)");
+                        .HasMaxLength(14)
+                        .HasColumnType("character varying(14)");
 
                     b.Property<string>("RG")
                         .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("character varying(15)");
+                        .HasMaxLength(12)
+                        .HasColumnType("character varying(12)");
 
                     b.Property<string>("ShotName")
                         .HasMaxLength(50)
@@ -236,9 +234,7 @@ namespace SistemaVendasAplication.Migrations
                         .HasColumnType("character varying(150)");
 
                     b.Property<string>("TelephoneNumber")
-                        .IsRequired()
-                        .HasMaxLength(9)
-                        .HasColumnType("character varying(9)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -494,7 +490,12 @@ namespace SistemaVendasAplication.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("character varying(150)");
 
-                    b.Property<DateTime?>("DueDate")
+                    b.Property<string>("CompanyName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTime>("DueDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
@@ -511,15 +512,9 @@ namespace SistemaVendasAplication.Migrations
                         .HasColumnType("character varying(150)");
 
                     b.Property<int?>("Number")
-                        .HasMaxLength(12)
                         .HasColumnType("integer");
 
                     b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasMaxLength(9)
-                        .HasColumnType("character varying(9)");
-
-                    b.Property<string>("RG")
                         .IsRequired()
                         .HasMaxLength(15)
                         .HasColumnType("character varying(15)");
