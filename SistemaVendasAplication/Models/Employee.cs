@@ -21,6 +21,7 @@ namespace SistemaVendasAplication.Models
 
         [Required(ErrorMessage = "O Campo RG é obrigatório!")]
         [StringLength(12, MinimumLength = 12, ErrorMessage = "Verifique se todos os numeros estão corretos")]
+        [MaxLength(12)]
         public string RG { get; set; }
 
         [Required(ErrorMessage = "O Campo CPF é obrigatório!")]
