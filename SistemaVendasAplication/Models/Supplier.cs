@@ -23,22 +23,23 @@ namespace SistemaVendasAplication.Models
         public string CompanyName { get; set; }
 
         [Required(ErrorMessage = "O Campo CPF é obrigatório!")]
-        [StringLength(12, MinimumLength = 12, ErrorMessage = "O minimo e o maximo é de 12 caracteris")]
+        [MinLength(14,ErrorMessage = "Minimo de 14 caracteris")]
+        [MaxLength(ErrorMessage = "Maximo de 14 caracteris")]
         public string CPF { get; set; }
 
         [Required(ErrorMessage = "CNPJ é obrigatório")]
-        [StringLength(15, MinimumLength = 15, ErrorMessage = "Confira se todos os caracteris estão certo")]
+        [MinLength(18, ErrorMessage = "Minimo de 18 caracteris")]
+        [MaxLength(ErrorMessage = "Maximo de 18 caracteris")]
         public string CNPJ { get; set; }
 
         [DataType(DataType.EmailAddress)]
         public string? Email { get; set; }
 
-        [StringLength(9, MinimumLength = 9, ErrorMessage = "Verifique se todos os números estão certos!")]
-        [DataType(DataType.PhoneNumber)]
-        public string TelephoneNumber { get; set; }
+        public string? TelephoneNumber { get; set; }
 
         [Required(ErrorMessage = "Número de celular é obrigatório")]
-        [StringLength(15, MinimumLength = 15, ErrorMessage = "Verifique se todos os números estão certos!")]
+        [MinLength(15, ErrorMessage = "Minimo de 15 caracteris")]
+        [MaxLength(ErrorMessage = "Maximo de 15 caracteris")]
         public string PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "CEP é obrigatótio!")]
