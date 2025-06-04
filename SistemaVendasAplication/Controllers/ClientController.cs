@@ -100,11 +100,15 @@ namespace SistemaVendasAplication.Controllers
                 {
                     throw new ArgumentNullException("O cliente não pode ser nulo!");
                 }
+                else if (await _context.Client.AnyAsync(c => c.RG.Contains(client.RG)))
+                {
+                    throw new ArgumentException("Cliente já existe no banco de dados! Verifique o RG");
+                }
                 else if (await _context.Client.AnyAsync(c => c.CPF.Contains(client.CPF)))
                 {
                     throw new ArgumentException("Cliente já existente no banco dados! Verifique o CPF");
                 }
-                else if (client != null && await _context.Client.AnyAsync(c => c.CPF.Contains(client.CPF)) == false)
+                else if (client != null && await _context.Client.AnyAsync(c => c.Id.ToString().Contains(client.Id.ToString()) || c.RG.Contains(client.RG) || c.CPF.Contains(client.CPF)) == false)
                 {
                     client.DueDate = client.DueDate.ToUniversalTime();
                     await _context.Client.AddAsync(client);
@@ -150,7 +154,7 @@ namespace SistemaVendasAplication.Controllers
                 {
                     throw new ArgumentNullException("Cliente nulo!");
                 }
-                else if (await _context.Client.AnyAsync(c => c.CPF.Contains(client.CPF)))
+                else if (await _context.Client.AnyAsync(c => c.Id.ToString().Contains(client.Id.ToString()) || c.RG.Contains(client.RG) || c.CPF.Contains(client.CPF)))
                 {
                     client.DueDate = client.DueDate.ToUniversalTime();
                     _context.Client.Update(client);
@@ -158,11 +162,11 @@ namespace SistemaVendasAplication.Controllers
 
                     if (value == 1)
                     {
-                        return Ok("Cliente cadastrado com sucesso!");
+                        return Ok(new { message = "Cliente foi atualizado com sucesso!" });
                     }
                     else
                     {
-                        return BadRequest("Cliente não foi cadastado!");
+                        return BadRequest("Cliente não foi atualizado!");
                     }
                 }
                 else
@@ -203,7 +207,7 @@ namespace SistemaVendasAplication.Controllers
                     }
                     else
                     {
-                        return BadRequest("Cliente não deletado!");
+                        return BadRequest("Cliente não foi deletado!");
                     }
                 }
                 else
