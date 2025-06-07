@@ -70,13 +70,9 @@ namespace SistemaVendasAplication.Models
         [Required(ErrorMessage = "A Lista de aturização é obrigatório")]
         public List<string> Authorizations { get; set; }
 
-        [JsonIgnore]
-        private readonly DateTime Date;
-
         public Employee()
         {
             Id = Guid.NewGuid();
-            DueDate = Date.ToUniversalTime();
         }
     }
 }
