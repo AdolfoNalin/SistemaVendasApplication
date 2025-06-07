@@ -42,7 +42,7 @@ namespace SistemaVendasAplication.Controllers
 
         #region GetId
         [HttpGet]
-        [Route("{id}")]
+        [Route("search/{id}")]
         public async Task<IActionResult> Get([FromRoute] Guid id)
         {
             try
@@ -63,7 +63,7 @@ namespace SistemaVendasAplication.Controllers
         #endregion
 
         #region GetString
-        [HttpGet("{value}")]
+        [HttpGet("smart/{value}")]
         public async Task<IActionResult> Get([FromRoute] string value)
         {
             try
@@ -148,7 +148,7 @@ namespace SistemaVendasAplication.Controllers
                 {
                     throw new ArgumentException("Funcionário não existente no banco de dados.");
                 }
-                else if (await _context.Employee.AnyAsync(e => e.CPF == employee.CEP) && employee != null) 
+                else if (await _context.Employee.AnyAsync(e => e.CPF == employee.CPF) && employee != null) 
                 {
                     employee.DueDate = employee.DueDate.ToUniversalTime();
                     _context.Employee.Update(employee);
