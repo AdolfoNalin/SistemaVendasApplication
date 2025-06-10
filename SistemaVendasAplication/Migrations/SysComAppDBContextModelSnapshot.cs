@@ -41,7 +41,7 @@ namespace SistemaVendasAplication.Migrations
                     b.Property<decimal>("Changes")
                         .HasColumnType("decimal(10,2)");
 
-                    b.Property<Guid?>("ClientId")
+                    b.Property<Guid>("ClientId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("Date")
@@ -50,16 +50,10 @@ namespace SistemaVendasAplication.Migrations
                     b.Property<decimal>("DescountPorcentage")
                         .HasColumnType("decimal(10,2)");
 
-                    b.Property<Guid?>("EmployeeId")
+                    b.Property<Guid>("EmployeeId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("IdClient")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("IdEmployee")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("IdProduct")
+                    b.Property<Guid>("ItemBudgetId")
                         .HasColumnType("uuid");
 
                     b.Property<decimal>("Subtotal")
@@ -247,16 +241,13 @@ namespace SistemaVendasAplication.Migrations
                     b.Property<double>("Amount")
                         .HasColumnType("double precision");
 
-                    b.Property<Guid?>("BudgetId")
+                    b.Property<Guid>("BudgetId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("IdBudget")
+                    b.Property<Guid>("BudgetId1")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("IdProduct")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("ProductId")
+                    b.Property<Guid>("ProductId")
                         .HasColumnType("uuid");
 
                     b.Property<decimal>("Subtotal")
@@ -264,7 +255,7 @@ namespace SistemaVendasAplication.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BudgetId");
+                    b.HasIndex("BudgetId1");
 
                     b.HasIndex("ProductId");
 
@@ -280,16 +271,7 @@ namespace SistemaVendasAplication.Migrations
                     b.Property<double>("Amount")
                         .HasColumnType("decimal(10,2)   ");
 
-                    b.Property<Guid?>("ClientId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("IdClient")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("IdProduct")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("IdSale")
+                    b.Property<Guid>("ClientId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Obs")
@@ -297,7 +279,7 @@ namespace SistemaVendasAplication.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
-                    b.Property<Guid?>("ProductId")
+                    b.Property<Guid>("ProductId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Reason")
@@ -305,7 +287,7 @@ namespace SistemaVendasAplication.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
-                    b.Property<Guid?>("SaleId")
+                    b.Property<Guid>("SaleId")
                         .HasColumnType("uuid");
 
                     b.Property<decimal>("Total")
@@ -331,13 +313,10 @@ namespace SistemaVendasAplication.Migrations
                     b.Property<double>("Amount")
                         .HasColumnType("double precision");
 
-                    b.Property<Guid>("IdProduct")
+                    b.Property<Guid>("ProductId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("ProductId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("SaleId")
+                    b.Property<Guid>("SaleId")
                         .HasColumnType("uuid");
 
                     b.Property<decimal>("Subtotal")
@@ -372,9 +351,6 @@ namespace SistemaVendasAplication.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
-                    b.Property<Guid>("IdSupllier")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("ShortDescription")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -382,6 +358,9 @@ namespace SistemaVendasAplication.Migrations
 
                     b.Property<decimal>("Subtotal")
                         .HasColumnType("decimal(10,2)");
+
+                    b.Property<Guid>("SupplierId")
+                        .HasColumnType("uuid");
 
                     b.Property<decimal>("TermPrice")
                         .HasColumnType("decimal(10,2)");
@@ -400,6 +379,8 @@ namespace SistemaVendasAplication.Migrations
                         .HasColumnType("decimal(10,2)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SupplierId");
 
                     b.ToTable("Product");
                 });
@@ -422,7 +403,7 @@ namespace SistemaVendasAplication.Migrations
                     b.Property<decimal>("Changes")
                         .HasColumnType("decimal(10,2)");
 
-                    b.Property<Guid?>("ClientId")
+                    b.Property<Guid>("ClientId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("Date")
@@ -431,13 +412,7 @@ namespace SistemaVendasAplication.Migrations
                     b.Property<decimal>("DescountPorcentage")
                         .HasColumnType("decimal(10,2)");
 
-                    b.Property<Guid?>("EmployeeId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("IdClient")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("IdEmployee")
+                    b.Property<Guid>("EmployeeId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("IdProduct")
@@ -539,11 +514,15 @@ namespace SistemaVendasAplication.Migrations
                 {
                     b.HasOne("SistemaVendasAplication.Models.Client", "Client")
                         .WithMany()
-                        .HasForeignKey("ClientId");
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("SistemaVendasAplication.Models.Employee", "Employee")
                         .WithMany()
-                        .HasForeignKey("EmployeeId");
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Client");
 
@@ -554,11 +533,15 @@ namespace SistemaVendasAplication.Migrations
                 {
                     b.HasOne("SistemaVendasAplication.Models.Budget", "Budget")
                         .WithMany()
-                        .HasForeignKey("BudgetId");
+                        .HasForeignKey("BudgetId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("SistemaVendasAplication.Models.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Budget");
 
@@ -569,15 +552,21 @@ namespace SistemaVendasAplication.Migrations
                 {
                     b.HasOne("SistemaVendasAplication.Models.Client", "Client")
                         .WithMany()
-                        .HasForeignKey("ClientId");
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("SistemaVendasAplication.Models.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("SistemaVendasAplication.Models.Sale", "Sale")
                         .WithMany()
-                        .HasForeignKey("SaleId");
+                        .HasForeignKey("SaleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Client");
 
@@ -590,26 +579,45 @@ namespace SistemaVendasAplication.Migrations
                 {
                     b.HasOne("SistemaVendasAplication.Models.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("SistemaVendasAplication.Models.Sale", "Sale")
                         .WithMany()
-                        .HasForeignKey("SaleId");
+                        .HasForeignKey("SaleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Product");
 
                     b.Navigation("Sale");
                 });
 
+            modelBuilder.Entity("SistemaVendasAplication.Models.Product", b =>
+                {
+                    b.HasOne("SistemaVendasAplication.Models.Supplier", "Supplier")
+                        .WithMany()
+                        .HasForeignKey("SupplierId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Supplier");
+                });
+
             modelBuilder.Entity("SistemaVendasAplication.Models.Sale", b =>
                 {
                     b.HasOne("SistemaVendasAplication.Models.Client", "Client")
                         .WithMany()
-                        .HasForeignKey("ClientId");
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("SistemaVendasAplication.Models.Employee", "Employee")
                         .WithMany()
-                        .HasForeignKey("EmployeeId");
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Client");
 
