@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SistemaVendasAplication.Data;
@@ -12,9 +13,11 @@ using SistemaVendasAplication.Data;
 namespace SistemaVendasAplication.Migrations
 {
     [DbContext(typeof(SysComAppDBContext))]
-    partial class SysComAppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250612233729_Updatebudget")]
+    partial class Updatebudget
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -249,7 +252,8 @@ namespace SistemaVendasAplication.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BudgetId");
+                    b.HasIndex("BudgetId")
+                        .IsUnique();
 
                     b.HasIndex("ProductId");
 
@@ -267,9 +271,6 @@ namespace SistemaVendasAplication.Migrations
 
                     b.Property<Guid>("ClientId")
                         .HasColumnType("uuid");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Obs")
                         .IsRequired()
@@ -412,6 +413,9 @@ namespace SistemaVendasAplication.Migrations
                     b.Property<Guid>("EmployeeId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("IdProduct")
+                        .HasColumnType("uuid");
+
                     b.Property<decimal>("Subtotal")
                         .HasColumnType("decimal(10,2)");
 
@@ -526,8 +530,8 @@ namespace SistemaVendasAplication.Migrations
             modelBuilder.Entity("SistemaVendasAplication.Models.ItemBudget", b =>
                 {
                     b.HasOne("SistemaVendasAplication.Models.Budget", "Budget")
-                        .WithMany()
-                        .HasForeignKey("BudgetId")
+                        .WithOne("ItemBudget")
+                        .HasForeignKey("SistemaVendasAplication.Models.ItemBudget", "BudgetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -616,6 +620,11 @@ namespace SistemaVendasAplication.Migrations
                     b.Navigation("Client");
 
                     b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("SistemaVendasAplication.Models.Budget", b =>
+                {
+                    b.Navigation("ItemBudget");
                 });
 #pragma warning restore 612, 618
         }

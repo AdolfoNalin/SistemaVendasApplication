@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SistemaVendasAplication.Data;
@@ -12,9 +13,11 @@ using SistemaVendasAplication.Data;
 namespace SistemaVendasAplication.Migrations
 {
     [DbContext(typeof(SysComAppDBContext))]
-    partial class SysComAppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250619121445_UpdateItemReturn")]
+    partial class UpdateItemReturn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
