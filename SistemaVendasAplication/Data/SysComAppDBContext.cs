@@ -14,10 +14,11 @@ namespace SistemaVendasAplication.Data
         public DbSet<ItemBudget> ItemBudget { get; set; }
         public DbSet<ItemSale> ItemSale { get; set; }
         public DbSet<ItemReturn> ItemReturn { get; set; }
+        public DbSet<User> User { get; set; }
 
         public SysComAppDBContext(DbContextOptions<SysComAppDBContext> options) : base(options)
         {
-            
+
         }
     }
 }

@@ -11,10 +11,10 @@ namespace SistemaVendasAplication.Models
         public Guid Id { get; set; }
 
         [Required(ErrorMessage = "Venda é obrigatória")]
-        private Guid IdSale { get; set; }
+        public Guid SaleId { get; set; }    
 
         [Required(ErrorMessage = "Produto é obrigatório")]
-        public Guid IdProduct { get; set; }
+        public Guid ProductId { get; set; }
 
         [Required(ErrorMessage = "Quantidade é obrigatório")]
         public double Amount { get; set; }

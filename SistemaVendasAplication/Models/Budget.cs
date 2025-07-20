@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
@@ -10,13 +11,10 @@ namespace SistemaVendasAplication.Models
         public Guid Id { get; set; }
 
         [Required(ErrorMessage = "É Nessario ter um vendedor válido para continuar o orçamento")]
-        public Guid IdEmployee { get; set; }
+        public Guid EmployeeId { get; set; }
 
         [Required(ErrorMessage = "É necessário ter um cliente para a realização do orçamento")]
-        public Guid IdClient { get; set; }
-
-        [Required(ErrorMessage = "È necessario ter um produto para realizar o orçamento")]
-        public Guid IdProduct { get; set; }
+        public Guid ClientId { get; set; }
 
         [Column(TypeName = "decimal(10,2)")]
         public decimal DescountPorcentage { get; set; }
@@ -29,7 +27,6 @@ namespace SistemaVendasAplication.Models
 
         [Column(TypeName = "decimal(10,2)")]
         public decimal AdditionCash { get; set; }
-
         [Column(TypeName = "decimal(10,2)")]
         public decimal Total { get; set; }
 

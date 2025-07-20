@@ -10,16 +10,18 @@ namespace SistemaVendasAplication.Models
         public Guid Id { get; set; }
 
         [Required(ErrorMessage = "É Nessario ter um vendedor válido para continuar o orçamento")]
-        public Guid IdEmployee { get; set; }
+        public Guid EmployeeId { get; set; }
 
         [Required(ErrorMessage = "É necessário ter um cliente para a realização do orçamento")]
-        public Guid IdClient { get; set; }
+        public Guid ClientId { get; set; }
 
-        [Required(ErrorMessage = "È necessario ter um produto para realizar o orçamento")]
-        public Guid IdProduct { get; set; }
+        [Required]
+        [MaxLength(50,ErrorMessage = "O numero maximo de caracteris é de 50")]
+        [MinLength(2,ErrorMessage = "O numero minimo de caracteris é de 2")]
+        public string PaymenetMethod { get; set; }
 
         [Column(TypeName = "decimal(10,2)")]
-        public decimal DescountPorcentage { get; set; }
+        public decimal PorcentageDicount { get; set; }
 
         [Column(TypeName = "decimal(10,2)")]
         public decimal CashDescount { get; set; }
@@ -39,13 +41,11 @@ namespace SistemaVendasAplication.Models
         [Column(TypeName = "decimal(10,2)")]
         public decimal Changes { get; set; }
 
-        [Required(ErrorMessage = "É necessário de data válida")]
-        [DataType(DataType.DateTime)]
-        public DateTime Date { get; set; }
+        [MaxLength(300, ErrorMessage = "Número maximo de caracteris é de 300")]
+        public string Observation { get; set; }
 
-        [Required(ErrorMessage = "É necessário hora válida")]
-        [DataType(DataType.DateTime)]
-        public DateTime Time { get; set; }
+        [Required(ErrorMessage = "É necessário a data!")]
+        public DateTime Date { get; set; }
 
         public Sale()
         {

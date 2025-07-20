@@ -47,9 +47,10 @@ namespace SistemaVendasAplication.Controllers
         {
             try
             {
-                List<Employee> employees = await _context.Employee.Where(e => e.Id == id).ToListAsync();
+                Employee employee = await _context.Employee.Where(e => e.Id == id).FirstOrDefaultAsync()
+                ?? throw new ArgumentNullException("");
 
-                return Ok(employees);
+                return Ok(employee);
             }
             catch(ArgumentNullException ane)
             {
@@ -68,10 +69,11 @@ namespace SistemaVendasAplication.Controllers
         {
             try
             {
-                List<Employee> employees = await _context.Employee.Where<Employee>(e => e.Name.ToUpper().Contains(value.ToUpper()) || e.ShotName.ToUpper().Contains(value.ToUpper())
-                || e.CPF.Contains(value)).ToListAsync();
+                Employee employee = await _context.Employee.Where<Employee>(e => e.Name.ToUpper().Contains(value.ToUpper()) || e.ShotName.ToUpper().Contains(value.ToUpper())
+                || e.CPF.Contains(value)).FirstOrDefaultAsync()
+                ?? throw new ArgumentNullException("Nenhum Funcionário encontrado!");
 
-                return Ok(employees);
+                return Ok(employee);
             }
             catch(ArgumentNullException ane)
             {
@@ -185,22 +187,34 @@ namespace SistemaVendasAplication.Controllers
 
         #region Delete
         [HttpDelete]
-        public async Task<IActionResult> Delete([FromBody] Employee employee)
+        public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             try
             {
-                _ = await _context.Employee.AnyAsync(e => e.Id == employee.Id) ? _context.Employee.Remove(employee) : 
-                    throw new ArgumentNullException("Funcionário nã existe");
-
-                int value = await _context.SaveChangesAsync();
-
-                if (value == 1)
+                if (id.ToString() == null || id.ToString() == String.Empty)
                 {
-                    return Ok("Funcionário foi deletado com sucesso");
+                    throw new ArgumentNullException("Id do Funcionário é nulo ou está vazio");
+                }
+                else if (await _context.Employee.AnyAsync(e => e.Id.ToString().Contains(id.ToString())) == false)
+                {
+                    throw new ArgumentException("Fucionário não existe");
+                }
+                else if (await _context.Employee.AnyAsync(e => e.Id.ToString().Contains(id.ToString())))
+                {
+                    int value = await _context.SaveChangesAsync();
+
+                    if (value == 1)
+                    {
+                        return Ok("Funcionário foi deletado com sucesso");
+                    }
+                    else
+                    {
+                        return BadRequest("Funcionário não deletado!");
+                    }
                 }
                 else
                 {
-                    return BadRequest("Funcionário não deletado!");
+                    throw new Exception("Aconteceu um erro");
                 }
             }
             catch(ArgumentNullException ane)

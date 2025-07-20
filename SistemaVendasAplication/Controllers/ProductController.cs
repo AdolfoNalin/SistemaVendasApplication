@@ -49,10 +49,10 @@ namespace SistemaVendasAplication.Controllers
         {
             try
             {
-                List<Product> products = await _context.Product.Where(p => p.Id.ToString().Contains(id.ToString())).ToListAsync()
+                Product product = await _context.Product.Where(p => p.Id.ToString().Contains(id.ToString())).FirstAsync()
                 ?? throw new ArgumentNullException("Lista está fazia!");
 
-                return Ok(products);
+                return Ok(product);
             }
             catch (ArgumentNullException ane)
             {
@@ -218,22 +218,54 @@ namespace SistemaVendasAplication.Controllers
         }
         #endregion
 
+        #region StockManager
+        [HttpPut("StockManager")]
+        public async Task<IActionResult> StockManager([FromQuery] Guid productId, double withdrawal)
+        {
+            try
+            {
+                Product product = await _context.Product.Where(p => p.Id.ToString().Contains(productId.ToString())).FirstAsync()
+                ?? throw new ArgumentNullException("Nenhum Produto encontrado!");
+
+                product.Amount = withdrawal;
+
+                _context.Product.Update(product);
+                int value = await _context.SaveChangesAsync();
+                if (value == 1)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    throw new Exception();
+                }
+            }
+            catch (ArgumentNullException ane)
+            {
+                return NotFound(ane.Message);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest($"{ex.Message}, {ex.StackTrace}, {ex.HelpLink}");
+            }
+        }
+        #endregion
+
         #region Delete
         [HttpDelete]
-        public async Task<IActionResult> Delete([FromBody] Product product)
+        public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
-             if (product is null)
+             if (id.ToString() is null || id.ToString() == String.Empty)
                 {
                     throw new ArgumentNullException("Produto é nulo");
                 }
-                else if (await _context.Product.AnyAsync(p => p.FullDescription.ToUpper().Contains(product.FullDescription.ToUpper())
-                || p.ShortDescription.ToUpper().Contains(product.ShortDescription.ToUpper())) == false)
+                else if (await _context.Product.AnyAsync(p => p.Id.ToString().Contains(id.ToString())) == false)
                 {
                     throw new ArgumentException("Produto não existe no banco de dados");
                 }
-                else if (await _context.Product.AnyAsync(p => p.FullDescription.ToUpper().Contains(product.FullDescription.ToUpper())
-                || p.ShortDescription.ToUpper().Contains(product.ShortDescription.ToUpper())) && product != null)
+                else if (await _context.Product.AnyAsync(p => p.Id.ToString().Contains(id.ToString())) && id.ToString() != null)
                 {
+                    Product product = await _context.Product.FirstAsync(p => p.Id.ToString().Contains(id.ToString()));
                     _context.Product.Remove(product);
                     int value = await _context.SaveChangesAsync();
 

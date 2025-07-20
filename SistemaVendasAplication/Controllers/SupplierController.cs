@@ -202,22 +202,23 @@ namespace SistemaVendasAplication.Controllers
         #endregion
 
         #region Delete
-        [HttpDelete]
-        public async Task<IActionResult> Delete([FromBody] Supplier supplier)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             try
             {
-                if (supplier is null)
+                if (id.ToString() == String.Empty || id.ToString() == null)
                 {
                     throw new ArgumentNullException("Fornecedor nulo");
                 }
-                else if (await _context.Supplier.AnyAsync(s => s.CPF.Contains(supplier.CEP) || s.CNPJ.Contains(supplier.CNPJ)) == false)
+                else if (await _context.Supplier.AnyAsync(s => s.Id.ToString().Contains(id.ToString()) == false))
                 {
-                    throw new ArgumentException($"{supplier.Name} não existe no banco de dados");
+                    throw new ArgumentException($"Fornecedor não existe no banco de dados");
                 }
-                else if (await _context.Supplier.AnyAsync(s => s.CPF.Contains(supplier.CPF) || s.CNPJ.Contains(supplier.CNPJ))
-                && supplier != null)
+                else if (await _context.Supplier.AnyAsync(s => s.Id.ToString().Contains(id.ToString()))
+                && id.ToString() != String.Empty)
                 {
+                    Supplier supplier = await _context.Supplier.FindAsync(id);
                     _context.Supplier.Remove(supplier);
                     int value = await _context.SaveChangesAsync();
 

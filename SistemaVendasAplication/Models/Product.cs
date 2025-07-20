@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
+using System.Text.Json.Serialization;
 
 namespace SistemaVendasAplication.Models
 {
@@ -11,7 +12,7 @@ namespace SistemaVendasAplication.Models
         public Guid Id { get; set; }
 
         [Required(ErrorMessage = "Fornecedor é obrigatário")]
-        public Guid IdSupllier { get; set; }
+        public Guid SupplierId { get; set; }
 
         [Required(ErrorMessage = "Descrição completa é obrigatória")]
         [StringLength(maximumLength: 200, MinimumLength = 10, ErrorMessage = "")]
@@ -23,7 +24,7 @@ namespace SistemaVendasAplication.Models
 
         [Required(ErrorMessage = "Preço avista é obrigatória")]
         [Column(TypeName = "decimal(10,2)")]
-        public decimal CashPrice{ get; set; }
+        public decimal CashPrice { get; set; }
 
         [Required(ErrorMessage = "Preço a prazo é obrigatória")]
         [Column(TypeName = "decimal(10,2)")]
@@ -39,10 +40,10 @@ namespace SistemaVendasAplication.Models
 
         [Required(ErrorMessage = "Quantidade é obrigatória")]
         [Column(TypeName = "decimal(10,2)")]
-        public double Amount{ get; set; }
+        public double Amount { get; set; }
 
         [Required(ErrorMessage = "Unidade de Medida é obrigatória")]
-        public string UnitMeasure{ get; set; }
+        public int UnitMeasure { get; set; }
 
         [Required(ErrorMessage = "SubTotal é obrigatória")]
         [Column(TypeName = "decimal(10,2)")]
@@ -52,13 +53,12 @@ namespace SistemaVendasAplication.Models
         [DataType(DataType.DateTime)]
         public DateTime Date { get; set; }
 
-        [Required(ErrorMessage = "Time é obrigatória")]
-        [DataType(DataType.DateTime)]
-        public DateTime Time { get; set; }
-
         public Product()
         {
             Id = Guid.NewGuid();
         }
+
+        [JsonIgnore]
+        public Supplier? Supplier { get; set; }
     }
 }

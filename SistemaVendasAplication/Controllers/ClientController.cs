@@ -49,10 +49,10 @@ namespace SistemaVendasAplication.Controllers
         {
             try
             {
-                List<Client> clients = await _context.Client.Where<Client>(c => c.Id == id).ToListAsync()
+                Client client = await _context.Client.Where<Client>(c => c.Id == id).FirstOrDefaultAsync()
                 ?? throw new ArgumentNullException("Cliente não existe!");
 
-                return Ok(clients);
+                return Ok(client);
             }
             catch (ArgumentNullException ane)
             {
@@ -72,11 +72,11 @@ namespace SistemaVendasAplication.Controllers
         {
             try
             {
-                List<Client> clients = await _context.Client.Where<Client>(c => c.Name.ToUpper().Contains(value.ToUpper()) || c.ShotName.ToUpper().Contains(value.ToUpper()) 
-                || c.CPF.Contains(value)).ToListAsync()
+                Client client = await _context.Client.Where<Client>(c => c.Name.ToUpper().Contains(value.ToUpper()) || c.ShotName.ToUpper().Contains(value.ToUpper()) 
+                || c.CPF.Contains(value)).FirstOrDefaultAsync()
                 ?? throw new ArgumentNullException("Cliente não encontrado!");
 
-                return Ok(clients);
+                return Ok(client);
             }
             catch (ArgumentNullException ane)
             {
@@ -186,17 +186,22 @@ namespace SistemaVendasAplication.Controllers
         #endregion
 
         #region Delete
-        [HttpDelete]
-        public async Task<IActionResult> Delete([FromBody] Client client)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             try
             {
-                if (client is null)
+                if (id.ToString() == null || id.ToString() == String.Empty)
                 {
-                    throw new ArgumentNullException("Cliente é nulo!");
+                    throw new ArgumentNullException("Id é nulo!");
                 }
-                else if (await _context.Client.AnyAsync(c => c.CPF.Contains(client.CPF)))
+                else if (await _context.Client.AnyAsync(c => c.Id.ToString().Contains(id.ToString())) == false)
                 {
+                    throw new ArgumentException("Nenhum resultado encontrado!");
+                }
+                else if (await _context.Client.AnyAsync(c => c.Id.ToString().Contains(id.ToString())))
+                {
+                    Client client = await _context.Client.FirstAsync(c => c.Id.ToString().Contains(id.ToString()));
                     _context.Client.Remove(client);
                     int value = await _context.SaveChangesAsync();
 

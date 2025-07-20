@@ -10,10 +10,10 @@ namespace SistemaVendasAplication.Models
         public Guid Id { get; set; }
 
         [Required(ErrorMessage = "É necessário ter o Orçamento")]
-        public Guid IdBudget { get; set; }
+        public Guid BudgetId { get; set; }
 
         [Required(ErrorMessage = "Produto é obrigatório")]
-        public Guid IdProduct { get; set; }
+        public Guid ProductId { get; set; }
 
         [Required(ErrorMessage = "Quantidade é obrigatório")]
         public double Amount { get; set; }
