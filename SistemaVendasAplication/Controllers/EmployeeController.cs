@@ -8,7 +8,7 @@ namespace SistemaVendasAplication.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize]
+    [Authorize]
     public class EmployeeController : Controller
     {
         private SysComAppDBContext _context;

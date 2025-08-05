@@ -15,6 +15,7 @@ namespace SistemaVendasAplication.Controllers
 {
     [ApiController]
     [Route("api/[Controller]")]
+    [Authorize]
     public class UserController : Controller
     {
         private SysComAppDBContext _context;

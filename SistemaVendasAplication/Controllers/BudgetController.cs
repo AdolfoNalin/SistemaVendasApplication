@@ -13,7 +13,7 @@ namespace SistemaVendasAplication.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize]
+    [Authorize]
     public class BudgetController : Controller
     {
         private SysComAppDBContext _context;

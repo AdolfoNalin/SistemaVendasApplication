@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Runtime.Versioning;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +16,7 @@ namespace SistemaVendasAplication.Controllers
 {
     [ApiController]
     [Route("api/[Controller]")]
-    //[Authoraize]
+    [Authorize]
     public class SupplierController : Controller
     {
         private SysComAppDBContext _context;
