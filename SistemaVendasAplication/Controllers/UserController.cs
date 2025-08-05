@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using SistemaVendasAplication.Data;
 using SistemaVendasAplication.Models;
+using SistemaVendasAplication.Service;
 
 namespace SistemaVendasAplication.Controllers
 {
@@ -15,14 +18,58 @@ namespace SistemaVendasAplication.Controllers
     public class UserController : Controller
     {
         private SysComAppDBContext _context;
-
-        public UserController(SysComAppDBContext context)
+        private readonly TokenGenerator _token;
+        public UserController(SysComAppDBContext context, TokenGenerator token)
         {
             _context = context;
+            _token = token;
         }
+
+        #region Login
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login([FromBody] UserLogin userLogin)
+        {
+            UserResponse response = new UserResponse();
+            try
+            {
+                if (userLogin is null)
+                {
+                    throw new ArgumentNullException("Usuário não pode ser nulo");
+                }
+
+                User user = await _context.User.Where<User>(u => u.Login.ToUpper().Contains(userLogin.Login.ToUpper())).FirstOrDefaultAsync()
+                ?? throw new ArgumentNullException("Login Inválido!");
+
+                //string passwordGeneration = Helpers.GenerationPassword.Generation(user.Password);
+
+                if (!user.Password.Equals(userLogin.Password))
+                {
+                    throw new InvalidOperationException("Senha incorreta");
+                }
+
+                response.user = user;
+                response.Token = _token.GeneratorToken(user);
+
+                return Ok(response);
+            }
+            catch (ArgumentNullException ane)
+            {
+                return NotFound(ane.Message);
+            }
+            catch (InvalidOperationException ioe)
+            {
+                return NotFound(ioe.Message);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest($"{ex.Message}, {ex.StackTrace}, {ex.HelpLink}");
+            }
+        }
+        #endregion
 
         #region GetAll
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Get()
         {
             try
@@ -46,6 +93,7 @@ namespace SistemaVendasAplication.Controllers
 
         #region GetId
         [HttpGet("Search/{id}")]
+        [Authorize]
         public async Task<IActionResult> Get([FromRoute] Guid id)
         {
             try
@@ -68,6 +116,7 @@ namespace SistemaVendasAplication.Controllers
 
         #region GetSmart
         [HttpGet("Smart/{value}")]
+        [Authorize]
         public async Task<IActionResult> Get([FromRoute] string value)
         {
             try
@@ -91,6 +140,7 @@ namespace SistemaVendasAplication.Controllers
 
         #region Post
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Post([FromBody] User user)
         {
             try
@@ -137,6 +187,7 @@ namespace SistemaVendasAplication.Controllers
 
         #region Put
         [HttpPut]
+        [Authorize]
         public async Task<IActionResult> Put([FromBody] User user)
         {
             try
@@ -177,6 +228,7 @@ namespace SistemaVendasAplication.Controllers
 
         #region Delete
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             try
