@@ -362,15 +362,11 @@ namespace SistemaVendasAplication.Migrations
                     b.Property<decimal>("TermPrice")
                         .HasColumnType("decimal(10,2)");
 
-                    b.Property<DateTime>("Time")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(10,2)");
 
-                    b.Property<string>("UnitMeasure")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("UnitMeasure")
+                        .HasColumnType("integer");
 
                     b.Property<decimal>("entryPrice")
                         .HasColumnType("decimal(10,2)");
@@ -406,17 +402,24 @@ namespace SistemaVendasAplication.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<decimal>("DescountPorcentage")
-                        .HasColumnType("decimal(10,2)");
-
                     b.Property<Guid>("EmployeeId")
                         .HasColumnType("uuid");
 
-                    b.Property<decimal>("Subtotal")
+                    b.Property<string>("Observation")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<string>("PaymenetMethod")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<decimal>("PorcentageDicount")
                         .HasColumnType("decimal(10,2)");
 
-                    b.Property<DateTime>("Time")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<decimal>("Subtotal")
+                        .HasColumnType("decimal(10,2)");
 
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(10,2)");
