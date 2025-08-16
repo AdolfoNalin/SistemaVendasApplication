@@ -98,6 +98,11 @@ namespace SistemaVendasAplication.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("text");
 
+                    b.Property<string>("MaritalStatus")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -108,20 +113,19 @@ namespace SistemaVendasAplication.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("character varying(150)");
 
-                    b.Property<int?>("Number")
+                    b.Property<int>("Number")
                         .HasColumnType("integer");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasMaxLength(14)
-                        .HasColumnType("character varying(14)");
+                        .HasMaxLength(15)
+                        .HasColumnType("character varying(15)");
 
                     b.Property<string>("RG")
-                        .IsRequired()
                         .HasMaxLength(12)
                         .HasColumnType("character varying(12)");
 
-                    b.Property<string>("ShotName")
+                    b.Property<string>("ShortName")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
@@ -334,7 +338,7 @@ namespace SistemaVendasAplication.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<double>("Amount")
+                    b.Property<decimal>("Amount")
                         .HasColumnType("decimal(10,2)");
 
                     b.Property<decimal>("CashPrice")
@@ -365,8 +369,9 @@ namespace SistemaVendasAplication.Migrations
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(10,2)");
 
-                    b.Property<int>("UnitMeasure")
-                        .HasColumnType("integer");
+                    b.Property<string>("UnitMeasure")
+                        .IsRequired()
+                        .HasColumnType("varchar(50)");
 
                     b.Property<decimal>("entryPrice")
                         .HasColumnType("decimal(10,2)");
