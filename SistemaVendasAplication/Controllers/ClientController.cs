@@ -49,7 +49,7 @@ namespace SistemaVendasAplication.Controllers
         {
             try
             {
-                Client client = await _context.Client.Where<Client>(c => c.Id == id).FirstOrDefaultAsync()
+                Client client = await _context.Client.Where<Client>(c => c.Id == id).OrderBy(c => c.Name).FirstOrDefaultAsync()
                 ?? throw new ArgumentNullException("Cliente não existe!");
 
                 return Ok(client);
@@ -72,8 +72,8 @@ namespace SistemaVendasAplication.Controllers
         {
             try
             {
-                Client client = await _context.Client.Where<Client>(c => c.Name.ToUpper().Contains(value.ToUpper()) || c.ShotName.ToUpper().Contains(value.ToUpper()) 
-                || c.CPF.Contains(value)).FirstOrDefaultAsync()
+                List<Client> client = await _context.Client.Where<Client>(c => c.Name.ToUpper().Contains(value.ToUpper()) || c.ShortName.ToUpper().Contains(value.ToUpper()) 
+                || c.CPF.Contains(value)).OrderBy(c => c.Name).ToListAsync()
                 ?? throw new ArgumentNullException("Cliente não encontrado!");
 
                 return Ok(client);
