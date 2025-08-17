@@ -69,11 +69,11 @@ namespace SistemaVendasAplication.Controllers
         {
             try
             {
-                Employee employee = await _context.Employee.Where<Employee>(e => e.Name.ToUpper().Contains(value.ToUpper()) || e.ShotName.ToUpper().Contains(value.ToUpper())
-                || e.CPF.Contains(value)).FirstOrDefaultAsync()
+                List<Employee> employees = await _context.Employee.Where<Employee>(e => e.Name.ToUpper().Contains(value.ToUpper()) || e.ShortName.ToUpper().Contains(value.ToUpper())
+                || e.CPF.Contains(value)).ToListAsync()
                 ?? throw new ArgumentNullException("Nenhum Funcionário encontrado!");
 
-                return Ok(employee);
+                return Ok(employees);
             }
             catch(ArgumentNullException ane)
             {
@@ -186,7 +186,7 @@ namespace SistemaVendasAplication.Controllers
         #endregion
 
         #region Delete
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             try
@@ -201,6 +201,11 @@ namespace SistemaVendasAplication.Controllers
                 }
                 else if (await _context.Employee.AnyAsync(e => e.Id.ToString().Contains(id.ToString())))
                 {
+                    Employee employee = await _context.Employee.Where(e => e.Id.ToString().Contains(id.ToString())).FirstOrDefaultAsync()
+                    ?? throw new ArgumentNullException("Funcionário não encontrado");
+
+                    _context.Employee.Remove(employee);
+                    
                     int value = await _context.SaveChangesAsync();
 
                     if (value == 1)

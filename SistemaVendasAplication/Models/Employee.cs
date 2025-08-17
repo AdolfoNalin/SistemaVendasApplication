@@ -14,15 +14,14 @@ namespace SistemaVendasAplication.Models
         public string Name { get; set; }
 
         [StringLength(50, MinimumLength = 2, ErrorMessage = "Minimo de 2 caracteris e o máximo de 10 caracteris")]
-        public string? ShotName { get; set; }
+        public string? ShortName { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime DueDate { get; set; }
 
-        [Required(ErrorMessage = "O Campo RG é obrigatório!")]
-        [StringLength(12, MinimumLength = 12, ErrorMessage = "Verifique se todos os numeros estão corretos")]
+        [StringLength(12, MinimumLength = 3, ErrorMessage = "Verifique se todos os numeros estão corretos")]
         [MaxLength(12)]
-        public string RG { get; set; }
+        public string? RG { get; set; }
 
         [Required(ErrorMessage = "O Campo CPF é obrigatório!")]
         [StringLength(14, MinimumLength = 14, ErrorMessage = "Verifique se todos os numeros estão corretos")]
@@ -30,11 +29,16 @@ namespace SistemaVendasAplication.Models
 
         [DataType(DataType.EmailAddress)]
         public string? Email { get; set; }
-        
+
+        [Required(ErrorMessage = "Estado civil é obrgatório!")]
+        [MaxLength(50)]
+        [MinLength(2)]
+        public string MaritalStatus { get; set; }
+
         public string? TelephoneNumber { get; set; }
 
         [Required(ErrorMessage = "Número de celular é obrigatório")]
-        [StringLength(14, MinimumLength = 14, ErrorMessage = "Verifique se todos os números estão certos!")]
+        [StringLength(15, MinimumLength = 15, ErrorMessage = "Verifique se todos os números estão certos!")]
         public string PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "CEP é obrigatótio!")]
@@ -49,26 +53,27 @@ namespace SistemaVendasAplication.Models
         [StringLength(150, MinimumLength = 3, ErrorMessage = "O minino de caracteris é 2 e o maximo é 150")]
         public string Street { get; set; }
 
+        [Required(ErrorMessage = "Numero é obrigatório")]
         public int? Number { get; set; }
 
         [Required(ErrorMessage = "Bairro é obrigatório")]
-        [StringLength(150, MinimumLength = 3, ErrorMessage = "O minino de caracteris é 2 e o maximo é 150")]
+        [StringLength(150, MinimumLength = 2, ErrorMessage = "O minino de caracteris é 2 e o maximo é 150")]
         public string Neighborhoods { get; set; }
 
         [Required(ErrorMessage = "Estado é obrigatório")]
-        [StringLength(150, MinimumLength = 3, ErrorMessage = "O minino de caracteris é 2 e o maximo é 150")]
+        [StringLength(150, MinimumLength = 2, ErrorMessage = "O minino de caracteris é 2 e o maximo é 150")]
         public string State { get; set; }
 
-        [Required(ErrorMessage = "Login é obrigatório")]
-        [StringLength(10, MinimumLength = 2, ErrorMessage = "Minimo de 2 caracteris e maximo de 10")]
-        public string Login{ get; set; }
-
-        [Required(ErrorMessage = "Senha é obrigatório")]
-        [StringLength(8, MinimumLength = 4, ErrorMessage = "")]
-        public string Password { get; set; }
+        [MaxLength(300, ErrorMessage = "Numero maximo de caracteris é 300")]
+        public string Complement { get; set; }
 
         [Required(ErrorMessage = "A Lista de aturização é obrigatório")]
         public List<string> Authorizations { get; set; }
+
+        [Required(ErrorMessage = "Função é obrigatória!")]
+        [MaxLength(150, ErrorMessage = "O maximo de caracteris é 150")]
+        [MinLength(2, ErrorMessage = "Minimo de caracteris é 2")]
+        public string Function { get; set; }
 
         public Employee()
         {
