@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -25,12 +26,12 @@ namespace SistemaVendasAplication.Controllers
         }
 
         #region Get
-        [HttpGet]
-        public async Task<IActionResult> Get()
+        [HttpGet("{returnId}")]
+        public async Task<IActionResult> Get([FromRoute] Guid returnId)
         {
             try
             {
-                List<ItemReturn> itens = await _context.ItemReturn.OrderBy(i => i.Date).ToListAsync()
+                List<ItemReturn> itens = await _context.ItemReturn.Where(i => i.ReturnId == returnId).ToListAsync()
                 ?? throw new ArgumentNullException("Lista de itens está vazia");
 
                 return Ok(itens);
@@ -46,15 +47,36 @@ namespace SistemaVendasAplication.Controllers
         }
         #endregion
 
-        #region GetDate
-        [HttpGet("Date")]
-        public async Task<IActionResult> Get([FromQuery] DateTime startDate, DateTime endDate)
+        #region GetIdReturn
+        [HttpGet("returnId/{returnId}")]
+        public async Task<IActionResult> GetIdReturn([FromRoute] Guid returnId)
         {
             try
             {
-                List<ItemReturn> itens = await _context.ItemReturn.Where(i => i.Date.ToString().Contains(startDate.ToString())
-                && i.Date.ToString().Contains(endDate.ToString()))
-                .OrderBy(i => i.Date).ToListAsync()
+                ItemReturn @return = await _context.ItemReturn.Where(i => i.ReturnId == returnId).FirstOrDefaultAsync()
+                ?? throw new ArgumentNullException("Nehum item com esse ID");
+
+                return Ok(@return.Id);
+            }
+            catch (ArgumentNullException ane)
+            {
+                return NotFound(ane.ParamName);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"{ex.Message}, {ex.StackTrace}, {ex.HelpLink}");
+            }
+        }
+        #endregion
+
+        #region GetDate
+        [HttpGet("Product")]
+        public async Task<IActionResult> Get([FromQuery] Guid returnId, Guid productId)
+        {
+            try
+            {
+                List<ItemReturn> itens = await _context.ItemReturn.Where(i => i.ReturnId == returnId &&
+                i.ProductId == productId).ToListAsync()
                 ?? throw new ArgumentNullException("Lista de itens está vazia");
 
                 return Ok(itens);
@@ -76,27 +98,14 @@ namespace SistemaVendasAplication.Controllers
         {
             try
             {
-                List<Client> clients = await _context.Client.ToListAsync() ??
-                throw new ArgumentNullException("Lista de Cliente está vazia");
+                Client client = await _context.Client.Where(c => c.Name.Contains(value.ToUpper())
+                || c.ShortName.ToUpper().Contains(value.ToUpper())).FirstOrDefaultAsync()
+                ?? throw new ArgumentNullException("Nenhum Cliente econtrado");
 
-                List<ItemReturn> itens = await _context.ItemReturn.OrderBy(i => i.Date).ToListAsync()
-                ?? throw new ArgumentNullException("Lista de Devolução está vazia");
+                List<Return> returns = await _context.Return.Where(i => i.ClientId == client.Id).ToListAsync() ??
+                throw new ArgumentException("Cliente não realizou nenhum devolução");
 
-                itens = itens.Select(i =>
-                {
-                    i.Client = clients.FirstOrDefault(c => c.Id.ToString().Contains(i.ClientId.ToString()));
-                    return i;
-                }).ToList();
-
-                if (itens is null)
-                {
-                    throw new ArgumentNullException($"Devolção de venda não existe no nome desse cliente");
-                }
-                else
-                {
-                    itens = itens.Where(i => i.Client.Name.ToUpper().Contains(value.ToUpper())).ToList();
-                    return Ok(itens);
-                }
+                return Ok(returns);
             }
             catch (ArgumentException ae)
             {
@@ -126,7 +135,6 @@ namespace SistemaVendasAplication.Controllers
                 else if (await _context.ItemReturn.AnyAsync(i => i.Id.ToString().Contains(itens.Id.ToString())) == false
                 || itens != null)
                 {
-                    itens.Date = itens.Date.ToUniversalTime();
                     await _context.ItemReturn.AddAsync(itens);
                     int value = await _context.SaveChangesAsync();
 
@@ -157,7 +165,7 @@ namespace SistemaVendasAplication.Controllers
 
         #region Put
         [HttpPut]
-        public async Task<IActionResult> Put([FromBody] ItemReturn itens)
+        public async Task<IActionResult> Put([FromBody] BindingList<ItemReturn> itens)
         {
             try
             {
@@ -165,23 +173,59 @@ namespace SistemaVendasAplication.Controllers
                 {
                     throw new ArgumentNullException("Devolução está nulo");
                 }
-                else if (await _context.ItemReturn.AnyAsync(i => i.Id.ToString().Contains(itens.Id.ToString())) == false)
+                else if (await _context.ItemReturn.AnyAsync(i => i.Id == itens[0].Id) == false)
                 {
                     throw new ArgumentException("Devolução não pode ser atualizado. Porque não existen no banco de dados");
                 }
-                else if (await _context.ItemReturn.AnyAsync(i => i.Id.ToString().Contains(itens.Id.ToString()))
+                else if (await _context.ItemReturn.AnyAsync(i => i.Id == itens[0].Id)
                 || itens != null)
                 {
-                    _context.ItemReturn.Update(itens);
-                    int value = await _context.SaveChangesAsync();
+                    List<ItemReturn> returns = _context.ItemReturn.Where(i => i.Id == itens[0].Id).ToList();
 
+                    int value = 0;
+                    foreach (ItemReturn item in returns)
+                    {
+                        value = 0;
+                        _context.ItemReturn.Remove(item);
+                        value = await _context.SaveChangesAsync();
+
+                        if (value == 1)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    
+                    int result = 0;
                     if (value == 1)
                     {
-                        return Ok("Devolução foi atualziada com sucesso!");
+                        foreach (ItemReturn item in itens)
+                        {
+                            result = 0;
+                            await _context.ItemReturn.AddAsync(item);
+                            value = await _context.SaveChangesAsync();
+
+                            if (value == 1)
+                            {
+                                continue;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                    }
+
+                    if (result == 1)
+                    {
+                        return Ok(true);
                     }
                     else
                     {
-                        return BadRequest("Devolução não foi ataulizada com sucesso!");
+                        return BadRequest(false);
                     }
                 }
                 else
