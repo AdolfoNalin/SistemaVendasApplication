@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SistemaVendasAplication.Migrations
 {
     /// <inheritdoc />
-    public partial class Create_database : Migration
+    public partial class Create : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,17 +18,18 @@ namespace SistemaVendasAplication.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    ShotName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    ShortName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     DueDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    RG = table.Column<string>(type: "character varying(12)", maxLength: 12, nullable: false),
+                    RG = table.Column<string>(type: "character varying(12)", maxLength: 12, nullable: true),
                     CPF = table.Column<string>(type: "character varying(14)", maxLength: 14, nullable: false),
+                    MaritalStatus = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Email = table.Column<string>(type: "text", nullable: true),
                     TelephoneNumber = table.Column<string>(type: "text", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "character varying(14)", maxLength: 14, nullable: false),
+                    PhoneNumber = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
                     CEP = table.Column<string>(type: "character varying(9)", maxLength: 9, nullable: false),
                     City = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
                     Street = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
-                    Number = table.Column<int>(type: "integer", nullable: true),
+                    Number = table.Column<int>(type: "integer", nullable: false),
                     Neighborhoods = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
                     State = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false)
                 },
@@ -43,22 +44,22 @@ namespace SistemaVendasAplication.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    ShotName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    ShortName = table.Column<string>(type: "text", nullable: true),
                     DueDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    RG = table.Column<string>(type: "character varying(12)", maxLength: 12, nullable: false),
+                    RG = table.Column<string>(type: "character varying(12)", maxLength: 12, nullable: true),
                     CPF = table.Column<string>(type: "character varying(14)", maxLength: 14, nullable: false),
                     Email = table.Column<string>(type: "text", nullable: true),
+                    MaritalStatus = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     TelephoneNumber = table.Column<string>(type: "text", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "character varying(14)", maxLength: 14, nullable: false),
+                    PhoneNumber = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
                     CEP = table.Column<string>(type: "character varying(9)", maxLength: 9, nullable: false),
                     City = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
                     Street = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
-                    Number = table.Column<int>(type: "integer", nullable: true),
+                    Number = table.Column<int>(type: "integer", nullable: false),
                     Neighborhoods = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
                     State = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
-                    Login = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
-                    Password = table.Column<string>(type: "character varying(8)", maxLength: 8, nullable: false),
-                    Authorizations = table.Column<List<string>>(type: "text[]", nullable: false)
+                    Complement = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
+                    Function = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -71,11 +72,10 @@ namespace SistemaVendasAplication.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    ShotName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    DueDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CompanyName = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    CPF = table.Column<string>(type: "text", nullable: false),
-                    CNPJ = table.Column<string>(type: "text", nullable: false),
+                    DueDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CNPJ = table.Column<string>(type: "character varying(18)", maxLength: 18, nullable: false),
+                    IE = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
                     Email = table.Column<string>(type: "text", nullable: true),
                     TelephoneNumber = table.Column<string>(type: "text", nullable: true),
                     PhoneNumber = table.Column<string>(type: "text", nullable: false),
@@ -84,26 +84,12 @@ namespace SistemaVendasAplication.Migrations
                     Street = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
                     Number = table.Column<int>(type: "integer", nullable: true),
                     Neighborhoods = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
-                    State = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false)
+                    State = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    Complement = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Supplier", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "User",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Login = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Password = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Function = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_User", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -147,14 +133,12 @@ namespace SistemaVendasAplication.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     EmployeeId = table.Column<Guid>(type: "uuid", nullable: false),
                     ClientId = table.Column<Guid>(type: "uuid", nullable: false),
-                    PaymenetMethod = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    PorcentageDicount = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
-                    CashDescount = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
+                    PaymentMethod = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    PercentageDiscount = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
+                    CashDiscount = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
                     AdditionPorcentage = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
                     AdditionCash = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
                     Total = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
-                    Subtotal = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
-                    Changes = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
                     Observation = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
                     Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
@@ -176,6 +160,28 @@ namespace SistemaVendasAplication.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "User",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    EmployeeId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Login = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Password = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Authorizations = table.Column<List<string>>(type: "text[]", maxLength: 300, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_User", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_User_Employee_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "Employee",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Product",
                 columns: table => new
                 {
@@ -185,11 +191,10 @@ namespace SistemaVendasAplication.Migrations
                     ShortDescription = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     CashPrice = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
                     TermPrice = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
-                    entryPrice = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
+                    EntryPrice = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
                     TotalPrice = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
                     Amount = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
-                    UnitMeasure = table.Column<string>(type: "varchar(50)", nullable: false),
-                    Subtotal = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
+                    UniMeasure = table.Column<string>(type: "varchar(50)", nullable: false),
                     Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
@@ -201,6 +206,39 @@ namespace SistemaVendasAplication.Migrations
                         principalTable: "Supplier",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Return",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    EmployeeId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ClientId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Total = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
+                    Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    SaleId = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Return", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Return_Client_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Client",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Return_Employee_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "Employee",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Return_Sale_SaleId",
+                        column: x => x.SaleId,
+                        principalTable: "Sale",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -235,24 +273,15 @@ namespace SistemaVendasAplication.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    SaleId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ClientId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ReturnId = table.Column<Guid>(type: "uuid", nullable: false),
                     ProductId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Amount = table.Column<double>(type: "numeric(10,2)", nullable: false),
-                    Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Reason = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    Total = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
-                    Obs = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false)
+                    Amount = table.Column<double>(type: "double precision", nullable: false),
+                    Subtotal = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
+                    SaleId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ItemReturn", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ItemReturn_Client_ClientId",
-                        column: x => x.ClientId,
-                        principalTable: "Client",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ItemReturn_Product_ProductId",
                         column: x => x.ProductId,
@@ -263,8 +292,7 @@ namespace SistemaVendasAplication.Migrations
                         name: "FK_ItemReturn_Sale_SaleId",
                         column: x => x.SaleId,
                         principalTable: "Sale",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -315,11 +343,6 @@ namespace SistemaVendasAplication.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ItemReturn_ClientId",
-                table: "ItemReturn",
-                column: "ClientId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ItemReturn_ProductId",
                 table: "ItemReturn",
                 column: "ProductId");
@@ -345,6 +368,21 @@ namespace SistemaVendasAplication.Migrations
                 column: "SupplierId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Return_ClientId",
+                table: "Return",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Return_EmployeeId",
+                table: "Return",
+                column: "EmployeeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Return_SaleId",
+                table: "Return",
+                column: "SaleId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Sale_ClientId",
                 table: "Sale",
                 column: "ClientId");
@@ -353,6 +391,12 @@ namespace SistemaVendasAplication.Migrations
                 name: "IX_Sale_EmployeeId",
                 table: "Sale",
                 column: "EmployeeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_User_EmployeeId",
+                table: "User",
+                column: "EmployeeId",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -366,6 +410,9 @@ namespace SistemaVendasAplication.Migrations
 
             migrationBuilder.DropTable(
                 name: "ItemSale");
+
+            migrationBuilder.DropTable(
+                name: "Return");
 
             migrationBuilder.DropTable(
                 name: "User");

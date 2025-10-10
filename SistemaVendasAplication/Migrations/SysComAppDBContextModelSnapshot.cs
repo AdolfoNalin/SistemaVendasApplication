@@ -153,10 +153,6 @@ namespace SistemaVendasAplication.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.PrimitiveCollection<List<string>>("Authorizations")
-                        .IsRequired()
-                        .HasColumnType("text[]");
-
                     b.Property<string>("CEP")
                         .IsRequired()
                         .HasMaxLength(9)
@@ -216,8 +212,7 @@ namespace SistemaVendasAplication.Migrations
                         .HasColumnType("character varying(12)");
 
                     b.Property<string>("ShortName")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("text");
 
                     b.Property<string>("State")
                         .IsRequired()
@@ -271,36 +266,21 @@ namespace SistemaVendasAplication.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<double>("Amount")
-                        .HasColumnType("decimal(10,2)   ");
-
-                    b.Property<Guid>("ClientId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Obs")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("double precision");
 
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Reason")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<Guid>("SaleId")
+                    b.Property<Guid>("ReturnId")
                         .HasColumnType("uuid");
 
-                    b.Property<decimal>("Total")
+                    b.Property<Guid?>("SaleId")
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("Subtotal")
                         .HasColumnType("decimal(10,2)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ClientId");
 
                     b.HasIndex("ProductId");
 
@@ -351,6 +331,9 @@ namespace SistemaVendasAplication.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<decimal>("EntryPrice")
+                        .HasColumnType("decimal(10,2)");
+
                     b.Property<string>("FullDescription")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -361,9 +344,6 @@ namespace SistemaVendasAplication.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
-                    b.Property<decimal>("Subtotal")
-                        .HasColumnType("decimal(10,2)");
-
                     b.Property<Guid>("SupplierId")
                         .HasColumnType("uuid");
 
@@ -373,18 +353,47 @@ namespace SistemaVendasAplication.Migrations
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(10,2)");
 
-                    b.Property<string>("UnitMeasure")
+                    b.Property<string>("UniMeasure")
                         .IsRequired()
                         .HasColumnType("varchar(50)");
-
-                    b.Property<decimal>("entryPrice")
-                        .HasColumnType("decimal(10,2)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("SupplierId");
 
                     b.ToTable("Product");
+                });
+
+            modelBuilder.Entity("SistemaVendasAplication.Models.Return", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ClientId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("SaleId")
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("Total")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("SaleId");
+
+                    b.ToTable("Return");
                 });
 
             modelBuilder.Entity("SistemaVendasAplication.Models.Sale", b =>
@@ -399,10 +408,7 @@ namespace SistemaVendasAplication.Migrations
                     b.Property<decimal>("AdditionPorcentage")
                         .HasColumnType("decimal(10,2)");
 
-                    b.Property<decimal>("CashDescount")
-                        .HasColumnType("decimal(10,2)");
-
-                    b.Property<decimal>("Changes")
+                    b.Property<decimal>("CashDiscount")
                         .HasColumnType("decimal(10,2)");
 
                     b.Property<Guid>("ClientId")
@@ -419,15 +425,12 @@ namespace SistemaVendasAplication.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("character varying(300)");
 
-                    b.Property<string>("PaymenetMethod")
+                    b.Property<string>("PaymentMethod")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<decimal>("PorcentageDicount")
-                        .HasColumnType("decimal(10,2)");
-
-                    b.Property<decimal>("Subtotal")
+                    b.Property<decimal>("PercentageDiscount")
                         .HasColumnType("decimal(10,2)");
 
                     b.Property<decimal>("Total")
@@ -455,11 +458,8 @@ namespace SistemaVendasAplication.Migrations
 
                     b.Property<string>("CNPJ")
                         .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("CPF")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(18)
+                        .HasColumnType("character varying(18)");
 
                     b.Property<string>("City")
                         .IsRequired()
@@ -471,11 +471,21 @@ namespace SistemaVendasAplication.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
+                    b.Property<string>("Complement")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
                         .HasColumnType("text");
+
+                    b.Property<string>("IE")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("character varying(15)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -493,10 +503,6 @@ namespace SistemaVendasAplication.Migrations
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<string>("ShotName")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("State")
                         .IsRequired()
@@ -522,9 +528,13 @@ namespace SistemaVendasAplication.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Function")
+                    b.PrimitiveCollection<List<string>>("Authorizations")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(300)
+                        .HasColumnType("text[]");
+
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Login")
                         .IsRequired()
@@ -542,6 +552,9 @@ namespace SistemaVendasAplication.Migrations
                         .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId")
+                        .IsUnique();
 
                     b.ToTable("User");
                 });
@@ -586,12 +599,6 @@ namespace SistemaVendasAplication.Migrations
 
             modelBuilder.Entity("SistemaVendasAplication.Models.ItemReturn", b =>
                 {
-                    b.HasOne("SistemaVendasAplication.Models.Client", "Client")
-                        .WithMany()
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("SistemaVendasAplication.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
@@ -600,11 +607,7 @@ namespace SistemaVendasAplication.Migrations
 
                     b.HasOne("SistemaVendasAplication.Models.Sale", "Sale")
                         .WithMany()
-                        .HasForeignKey("SaleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Client");
+                        .HasForeignKey("SaleId");
 
                     b.Navigation("Product");
 
@@ -641,6 +644,33 @@ namespace SistemaVendasAplication.Migrations
                     b.Navigation("Supplier");
                 });
 
+            modelBuilder.Entity("SistemaVendasAplication.Models.Return", b =>
+                {
+                    b.HasOne("SistemaVendasAplication.Models.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SistemaVendasAplication.Models.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SistemaVendasAplication.Models.Sale", "Sale")
+                        .WithMany()
+                        .HasForeignKey("SaleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("Sale");
+                });
+
             modelBuilder.Entity("SistemaVendasAplication.Models.Sale", b =>
                 {
                     b.HasOne("SistemaVendasAplication.Models.Client", "Client")
@@ -658,6 +688,22 @@ namespace SistemaVendasAplication.Migrations
                     b.Navigation("Client");
 
                     b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("SistemaVendasAplication.Models.User", b =>
+                {
+                    b.HasOne("SistemaVendasAplication.Models.Employee", "Employee")
+                        .WithOne("User")
+                        .HasForeignKey("SistemaVendasAplication.Models.User", "EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("SistemaVendasAplication.Models.Employee", b =>
+                {
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }
