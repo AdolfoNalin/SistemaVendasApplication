@@ -71,6 +71,28 @@ namespace SistemaVendasAplication.Migrations
                     b.ToTable("Budget");
                 });
 
+            modelBuilder.Entity("SistemaVendasAplication.Models.CashDesck", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal>("Total")
+                        .HasColumnType("numeric");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CashDescks");
+                });
+
             modelBuilder.Entity("SistemaVendasAplication.Models.Client", b =>
                 {
                     b.Property<Guid>("Id")
@@ -91,6 +113,10 @@ namespace SistemaVendasAplication.Migrations
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("character varying(150)");
+
+                    b.Property<string>("Complement")
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
 
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("timestamp with time zone");
@@ -576,6 +602,17 @@ namespace SistemaVendasAplication.Migrations
                     b.Navigation("Client");
 
                     b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("SistemaVendasAplication.Models.CashDesck", b =>
+                {
+                    b.HasOne("SistemaVendasAplication.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("SistemaVendasAplication.Models.ItemBudget", b =>
