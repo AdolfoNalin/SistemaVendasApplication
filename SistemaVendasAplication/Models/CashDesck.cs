@@ -9,6 +9,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SistemaVendasAplication.Models
 {
+    public enum IsCashDesck
+    {
+        close = 1,
+        Open
+    }
     public class CashDesck
     {
         [Key]
@@ -20,6 +25,9 @@ namespace SistemaVendasAplication.Models
         [Required(ErrorMessage = "É necessário data")]
         [DataType(DataType.Date)]
         public DateTime Date { get; set; }
+
+        [Required]
+        public IsCashDesck Status { get; set; }
 
         [Required(ErrorMessage = "É necessário o total")]
         public decimal Total { get; set; }
