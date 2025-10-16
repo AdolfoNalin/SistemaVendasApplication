@@ -80,6 +80,12 @@ namespace SistemaVendasAplication.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<decimal>("OpeningAmount")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
                     b.Property<decimal>("Total")
                         .HasColumnType("numeric");
 
@@ -90,7 +96,7 @@ namespace SistemaVendasAplication.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("CashDescks");
+                    b.ToTable("CashDesck");
                 });
 
             modelBuilder.Entity("SistemaVendasAplication.Models.Client", b =>
@@ -436,6 +442,9 @@ namespace SistemaVendasAplication.Migrations
 
                     b.Property<decimal>("CashDiscount")
                         .HasColumnType("decimal(10,2)");
+
+                    b.Property<Guid>("CashId")
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("ClientId")
                         .HasColumnType("uuid");
