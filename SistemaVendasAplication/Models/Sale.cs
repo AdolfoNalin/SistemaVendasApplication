@@ -9,22 +9,25 @@ namespace SistemaVendasAplication.Models
         [Key]
         public Guid Id { get; set; }
 
+        [Required(ErrorMessage = "É necessário o caixa")]
+        public Guid CashId { get; set; }
+
         [Required(ErrorMessage = "É Nessario ter um vendedor válido para continuar o orçamento")]
         public Guid EmployeeId { get; set; }
-
+ 
         [Required(ErrorMessage = "É necessário ter um cliente para a realização do orçamento")]
         public Guid ClientId { get; set; }
 
         [Required]
         [MaxLength(50,ErrorMessage = "O numero maximo de caracteris é de 50")]
         [MinLength(2,ErrorMessage = "O numero minimo de caracteris é de 2")]
-        public string PaymenetMethod { get; set; }
+        public string PaymentMethod { get; set; }
 
         [Column(TypeName = "decimal(10,2)")]
-        public decimal PorcentageDicount { get; set; }
+        public decimal PercentageDiscount { get; set; }
 
         [Column(TypeName = "decimal(10,2)")]
-        public decimal CashDescount { get; set; }
+        public decimal CashDiscount { get; set; }
 
         [Column(TypeName = "decimal(10,2)")]
         public decimal AdditionPorcentage { get; set; }
@@ -34,12 +37,6 @@ namespace SistemaVendasAplication.Models
 
         [Column(TypeName = "decimal(10,2)")]
         public decimal Total { get; set; }
-
-        [Column(TypeName = "decimal(10,2)")]
-        public decimal Subtotal { get; set; }
-
-        [Column(TypeName = "decimal(10,2)")]
-        public decimal Changes { get; set; }
 
         [MaxLength(300, ErrorMessage = "Número maximo de caracteris é de 300")]
         public string Observation { get; set; }
