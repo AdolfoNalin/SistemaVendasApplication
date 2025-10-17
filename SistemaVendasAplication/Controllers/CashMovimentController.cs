@@ -168,21 +168,22 @@ namespace SistemaVendasAplication.Controllers
         #endregion
 
         #region Delete
-        [HttpDelete]
-        public async Task<IActionResult> Delete([FromBody] CashMoviment moviment)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             try
             {
-                if (moviment is null)
+                if (id == Guid.Empty)
                 {
                     throw new ArgumentNullException("Movimentação não pode ser nula");
                 }
-                else if (await _context.CashMoviment.AnyAsync(c => c.Id == moviment.Id) == false)
+                else if (await _context.CashMoviment.AnyAsync(c => c.Id == id) == false)
                 {
                     throw new ArgumentException("Movimentação não existe no banco de dados");
                 }
                 else
                 {
+                    CashMoviment moviment = _context.CashMoviment.Where(c => c.Id == id).ToList().First();
                     _context.CashMoviment.Remove(moviment);
                     int value = await _context.SaveChangesAsync();
 
