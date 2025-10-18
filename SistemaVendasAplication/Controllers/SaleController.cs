@@ -51,7 +51,8 @@ namespace SistemaVendasAplication.Controllers
         {
             try
             {
-                Sale sale = await _context.Sale.LastOrDefaultAsync()
+                Sale sale = await _context.Sale.OrderBy(s => s.Date)
+                .LastOrDefaultAsync()
                 ?? throw new ArgumentNullException("Nenhum resultado encontrado!");
 
                 return Ok(sale);
@@ -67,8 +68,8 @@ namespace SistemaVendasAplication.Controllers
         }
         #endregion
 
-         #region GetId
-            [HttpGet("search/{id}")]
+        #region GetId
+        [HttpGet("search/{id}")]
         public async Task<IActionResult> Get([FromRoute] Guid id)
         {
             try
@@ -88,6 +89,28 @@ namespace SistemaVendasAplication.Controllers
             }
         }
         #endregion
+
+        #region GetSaleId
+        [HttpGet("CashSession/{cashId}")]
+        public async Task<IActionResult> GetCash([FromRoute] Guid cashId)
+        {
+            try
+            {
+                List<Sale> sales = await _context.Sale.Where(s => s.CashId == cashId).ToListAsync()
+                ?? throw new ArgumentNullException("Nenhuma venda encontrada");
+
+                return Ok(sales);
+            }
+            catch (ArgumentNullException ane)
+            {
+                return NotFound(ane.ParamName);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest($"{ex.Message}, {ex.StackTrace}, {ex.HelpLink}");
+            }
+        }
+        #endregion 
 
         #region GetString
         [HttpGet("smart/{value}")]
@@ -142,7 +165,7 @@ namespace SistemaVendasAplication.Controllers
             }
             catch (ArgumentNullException ane)
             {
-                return NotFound(ane.Message);                                                                                       
+                return NotFound(ane.Message);
             }
             catch (Exception ex)
             {
@@ -161,22 +184,22 @@ namespace SistemaVendasAplication.Controllers
                 {
                     throw new ArgumentNullException("Venda é nula");
                 }
-                else if (await _context.Sale.AnyAsync(s => s.Id.ToString().Contains(sale.Id.ToString())))
+                else if (await _context.Sale.AnyAsync(s => s.Id == sale.Id))
                 {
                     throw new ArgumentException("Venda já existente no banco de dados");
                 }
-                else if (sale != null && await _context.Sale.AnyAsync(s => s.Id.ToString().Contains(sale.Id.ToString())) == false)
+                else if (sale != null && await _context.Sale.AnyAsync(s => s.Id == sale.Id) == false)
                 {
                     await _context.Sale.AddAsync(sale);
                     int value = await _context.SaveChangesAsync();
 
                     if (value == 1)
                     {
-                        return Ok("Venda cadastrada com Sucesso!");
+                        return Ok(true);
                     }
                     else
                     {
-                        return BadRequest("O Correu um erro");
+                        return BadRequest(false);
                     }
                 }
                 else
@@ -205,22 +228,22 @@ namespace SistemaVendasAplication.Controllers
                 {
                     throw new ArgumentNullException("Venda é nula");
                 }
-                else if (await _context.Sale.AnyAsync(s => s.Id.ToString().Contains(sale.Id.ToString())) == false)
+                else if (await _context.Sale.AnyAsync(s => s.Id == sale.Id) == false)
                 {
                     throw new ArgumentException("Venda não existe no banco de dados");
                 }
-                else if (await _context.Sale.AnyAsync(s => s.Id.ToString().Contains(sale.Id.ToString())))
+                else if (await _context.Sale.AnyAsync(s => s.Id == sale.Id))
                 {
                     _context.Sale.Update(sale);
                     int value = await _context.SaveChangesAsync();
 
                     if (value == 1)
                     {
-                        return Ok("Venda atualizada com sucesso");
+                        return Ok(true);
                     }
                     else
                     {
-                        return BadRequest("Venda não foi atualizada");
+                        return BadRequest(false);
                     }
                 }
                 else
@@ -240,21 +263,22 @@ namespace SistemaVendasAplication.Controllers
         #endregion
 
         #region Delete
-        [HttpDelete]
-        public async Task<IActionResult> Detele([FromBody] Sale sale)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Detele([FromRoute] Guid id)
         {
             try
             {
-                if (sale is null)
+                if (id == null || id == Guid.Empty)
                 {
                     throw new ArgumentNullException("Venda é nula");
                 }
-                else if (await _context.Sale.AnyAsync(s => s.Id.ToString().Contains(sale.Id.ToString())) == false)
+                else if (await _context.Sale.AnyAsync(s => s.Id == id) == false)
                 {
-                    throw new ArgumentException("venda não existe no banco de dados");
+                    throw new ArgumentException("Venda não existe no banco de dados");
                 }
-                else if (await _context.Sale.AnyAsync(s => s.Id.ToString().Contains(sale.Id.ToString())) && sale != null)
+                else if (await _context.Sale.AnyAsync(s => s.Id == id) && id != null)
                 {
+                    Sale sale = await _context.Sale.Where(s => s.Id == id).FirstOrDefaultAsync();
                     _context.Sale.Remove(sale);
                     int value = await _context.SaveChangesAsync();
 
