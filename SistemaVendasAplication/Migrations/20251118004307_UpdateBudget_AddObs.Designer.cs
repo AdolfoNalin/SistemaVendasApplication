@@ -13,8 +13,8 @@ using SistemaVendasAplication.Data;
 namespace SistemaVendasAplication.Migrations
 {
     [DbContext(typeof(SysComAppDBContext))]
-    [Migration("20251011003003_UpdateClient_complement")]
-    partial class UpdateClient_complement
+    [Migration("20251118004307_UpdateBudget_AddObs")]
+    partial class UpdateBudget_AddObs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,9 +41,6 @@ namespace SistemaVendasAplication.Migrations
                     b.Property<decimal>("CashDescount")
                         .HasColumnType("decimal(10,2)");
 
-                    b.Property<decimal>("Changes")
-                        .HasColumnType("decimal(10,2)");
-
                     b.Property<Guid>("ClientId")
                         .HasColumnType("uuid");
 
@@ -56,11 +53,15 @@ namespace SistemaVendasAplication.Migrations
                     b.Property<Guid>("EmployeeId")
                         .HasColumnType("uuid");
 
-                    b.Property<decimal>("Subtotal")
-                        .HasColumnType("decimal(10,2)");
+                    b.Property<string>("Obs")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
-                    b.Property<DateTime>("Time")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<string>("PaymentMethod")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(10,2)");
@@ -72,6 +73,72 @@ namespace SistemaVendasAplication.Migrations
                     b.HasIndex("EmployeeId");
 
                     b.ToTable("Budget");
+                });
+
+            modelBuilder.Entity("SistemaVendasAplication.Models.CashMoviment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric");
+
+                    b.Property<Guid>("CashSessionId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CashSessionId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CashMoviment");
+                });
+
+            modelBuilder.Entity("SistemaVendasAplication.Models.CashSession", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Enable")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("OpeningAmount")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("Total")
+                        .HasColumnType("numeric");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CashSession");
                 });
 
             modelBuilder.Entity("SistemaVendasAplication.Models.Client", b =>
@@ -418,6 +485,9 @@ namespace SistemaVendasAplication.Migrations
                     b.Property<decimal>("CashDiscount")
                         .HasColumnType("decimal(10,2)");
 
+                    b.Property<Guid>("CashId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid>("ClientId")
                         .HasColumnType("uuid");
 
@@ -583,6 +653,36 @@ namespace SistemaVendasAplication.Migrations
                     b.Navigation("Client");
 
                     b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("SistemaVendasAplication.Models.CashMoviment", b =>
+                {
+                    b.HasOne("SistemaVendasAplication.Models.CashSession", "CashSession")
+                        .WithMany()
+                        .HasForeignKey("CashSessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SistemaVendasAplication.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CashSession");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SistemaVendasAplication.Models.CashSession", b =>
+                {
+                    b.HasOne("SistemaVendasAplication.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("SistemaVendasAplication.Models.ItemBudget", b =>
