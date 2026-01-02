@@ -32,8 +32,11 @@ namespace SistemaVendasAplication.Migrations
                     b.Property<decimal>("AdditionCash")
                         .HasColumnType("decimal(10,2)");
 
-                    b.Property<decimal>("AdditionPorcentage")
+                    b.Property<decimal>("AdditionPercentage")
                         .HasColumnType("decimal(10,2)");
+
+                    b.Property<int>("AmountItens")
+                        .HasColumnType("integer");
 
                     b.Property<decimal>("CashDescount")
                         .HasColumnType("decimal(10,2)");
@@ -44,14 +47,13 @@ namespace SistemaVendasAplication.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<decimal>("DescountPorcentage")
+                    b.Property<decimal>("DescountPercentage")
                         .HasColumnType("decimal(10,2)");
 
                     b.Property<Guid>("EmployeeId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Obs")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
@@ -162,6 +164,9 @@ namespace SistemaVendasAplication.Migrations
                     b.Property<string>("Complement")
                         .HasMaxLength(300)
                         .HasColumnType("character varying(300)");
+
+                    b.Property<decimal>("Credit")
+                        .HasColumnType("numeric");
 
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("timestamp with time zone");
