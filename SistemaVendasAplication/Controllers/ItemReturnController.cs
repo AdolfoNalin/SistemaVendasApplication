@@ -120,7 +120,7 @@ namespace SistemaVendasAplication.Controllers
 
         #region Post
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] ItemReturn itens)
+        public async Task<IActionResult> Post([FromBody] BindingList<ItemReturn> itens)
         {
             try
             {
@@ -128,23 +128,32 @@ namespace SistemaVendasAplication.Controllers
                 {
                     throw new ArgumentNullException("Devolução é nulo");
                 }
-                else if (await _context.ItemReturn.AnyAsync(i => i.Id.ToString().Contains(itens.Id.ToString())))
+                else if (await _context.ItemReturn.AnyAsync(i => i.Id.ToString().Contains(itens[0].Id.ToString())))
                 {
                     throw new ArgumentException("Esse venda já foi realizada a devolução");
                 }
-                else if (await _context.ItemReturn.AnyAsync(i => i.Id.ToString().Contains(itens.Id.ToString())) == false
+                else if (await _context.ItemReturn.AnyAsync(i => i.Id.ToString().Contains(itens[0].Id.ToString())) == false
                 || itens != null)
                 {
-                    await _context.ItemReturn.AddAsync(itens);
-                    int value = await _context.SaveChangesAsync();
+                    int value = 0;
+                    foreach (ItemReturn item in itens)
+                    {
+                        await _context.ItemReturn.AddAsync(item);
+                        value = await _context.SaveChangesAsync();
 
+                        if (value != 1)
+                        {
+                            break;
+                        }
+                    }
+                    
                     if (value == 1)
                     {
-                        return Ok("Devolução cadastrada com sucesso!");
+                        return Ok(true);
                     }
                     else
                     {
-                        return BadRequest("Não foi possivel cadastrar a devolução");
+                        return BadRequest(false);
                     }
                 }
                 else

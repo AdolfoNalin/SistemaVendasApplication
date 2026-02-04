@@ -77,24 +77,13 @@ namespace SistemaVendasAplication.Controllers
                 {
                     throw new ArgumentNullException("O valor é nulo!");
                 }
-                else if (await _context.Product.AnyAsync(p => p.FullDescription.ToUpper().Contains(value.ToUpper())
-                || p.ShortDescription.ToUpper().Contains(value.ToUpper())) == false)
-                {
-                    throw new ArgumentException("Produto não existe!");
-                }
-                else if (await _context.Product.AnyAsync(p => p.FullDescription.ToUpper().Contains(value.ToUpper())
-                || p.ShortDescription.ToUpper().Contains(value.ToUpper())))
+                else 
                 {
                     List<Product> products = await _context.Product.Where<Product>(p => p.FullDescription.ToUpper().Contains(value.ToUpper()) ||
                     p.ShortDescription.ToUpper().Contains(value.ToUpper())).ToListAsync() ?? throw new ArgumentException("Lista está vazia!");
 
                     return Ok(products);
                 }
-                else
-                {
-                    throw new Exception("Aconteceu um erro");
-                }
-
             }
             catch (ArgumentNullException ane)
             {
@@ -222,24 +211,35 @@ namespace SistemaVendasAplication.Controllers
 
         #region StockManager
         [HttpPut("StockManager")]
-        public async Task<IActionResult> StockManager([FromQuery] Guid productId, double withdrawal)
+        public async Task<IActionResult> StockManager([FromQuery] Guid productId, decimal withdrawal)
         {
             try
             {
-                Product product = await _context.Product.Where(p => p.Id.ToString().Contains(productId.ToString())).FirstAsync()
-                ?? throw new ArgumentNullException("Nenhum Produto encontrado!");
-
-                product.Amount = withdrawal;
-
-                _context.Product.Update(product);
-                int value = await _context.SaveChangesAsync();
-                if (value == 1)
+                if (productId == Guid.Empty)
                 {
-                    return Ok();
+                    throw new ArgumentNullException("É necessário um produto!");
+                }
+                else if (await _context.Product.AnyAsync(p => p.Id == productId) == false)
+                {
+                    throw new ArgumentNullException("Produto não existe.", "Veirifique o ID");
                 }
                 else
                 {
-                    throw new Exception();
+                    Product product = await _context.Product.Where(p => p.Id.ToString().Contains(productId.ToString())).FirstAsync()
+                    ?? throw new ArgumentNullException("Nenhum Produto encontrado!");
+
+                    product.Amount = withdrawal;
+
+                    _context.Product.Update(product);
+                    int value = await _context.SaveChangesAsync();
+                    if (value == 1)
+                    {
+                        return Ok(true);
+                    }
+                    else
+                    {
+                        return BadRequest(false);
+                    }
                 }
             }
             catch (ArgumentNullException ane)
@@ -254,7 +254,7 @@ namespace SistemaVendasAplication.Controllers
         #endregion
 
         #region Delete
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
              if (id.ToString() is null || id.ToString() == String.Empty)

@@ -15,11 +15,11 @@ namespace SistemaVendasAplication.Models
         public Guid SupplierId { get; set; }
 
         [Required(ErrorMessage = "Descrição completa é obrigatória")]
-        [StringLength(maximumLength: 200, MinimumLength = 10, ErrorMessage = "")]
+        [StringLength(maximumLength: 200, MinimumLength = 5, ErrorMessage = "")]
         public string FullDescription { get; set; }
 
         [Required(ErrorMessage = "Descrição resumida é obrigatória")]
-        [StringLength(maximumLength: 200, MinimumLength = 10, ErrorMessage = "")]
+        [StringLength(maximumLength: 200, MinimumLength = 5, ErrorMessage = "")]
         public string ShortDescription { get; set; }
 
         [Required(ErrorMessage = "Preço avista é obrigatória")]
@@ -32,7 +32,7 @@ namespace SistemaVendasAplication.Models
 
         [Required(ErrorMessage = "Preço entrada é obrigatória")]
         [Column(TypeName = "decimal(10,2)")]
-        public decimal entryPrice { get; set; }
+        public decimal EntryPrice { get; set; }
 
         [Required(ErrorMessage = "Preço total é obrigatória")]
         [Column(TypeName = "decimal(10,2)")]
@@ -40,14 +40,11 @@ namespace SistemaVendasAplication.Models
 
         [Required(ErrorMessage = "Quantidade é obrigatória")]
         [Column(TypeName = "decimal(10,2)")]
-        public double Amount { get; set; }
+        public decimal Amount { get; set; }
 
-        [Required(ErrorMessage = "Unidade de Medida é obrigatória")]
-        public int UnitMeasure { get; set; }
-
-        [Required(ErrorMessage = "SubTotal é obrigatória")]
-        [Column(TypeName = "decimal(10,2)")]
-        public decimal Subtotal { get; set; }
+        [Required(ErrorMessage = "Unidade de mediada é obrigatória")]
+        [Column(TypeName = "varchar(50)")]
+        public string UniMeasure { get; set; }
 
         [Required(ErrorMessage = "Data é obrigatória")]
         [DataType(DataType.DateTime)]

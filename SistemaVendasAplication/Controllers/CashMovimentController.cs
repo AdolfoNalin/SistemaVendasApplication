@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design.Internal;
 using SistemaVendasAplication.Data;
 using SistemaVendasAplication.Models;
 
@@ -103,16 +104,17 @@ namespace SistemaVendasAplication.Controllers
                 }
                 else
                 {
-                    _context.CashMoviment.Update(moviment);
+                    moviment.Date = moviment.Date.ToUniversalTime();
+                    await _context.CashMoviment.AddAsync(moviment);
                     int value = await _context.SaveChangesAsync();
 
                     if (value == 1)
                     {
-                        return Ok("Movimentação realizada com sucesso");
+                        return Ok(true);
                     }
                     else
                     {
-                        return BadRequest("Movimentação não foi realizada");
+                        return BadRequest(false);
                     }
                 }
             }
@@ -128,7 +130,7 @@ namespace SistemaVendasAplication.Controllers
         #endregion
 
         #region Put
-        [HttpPost]
+        [HttpPut]
         public async Task<IActionResult> Put([FromBody] CashMoviment moviment)
         {
             try

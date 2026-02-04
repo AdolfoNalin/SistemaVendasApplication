@@ -8,7 +8,7 @@ namespace SistemaVendasAplication.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     public class EmployeeController : Controller
     {
         private SysComAppDBContext _context;
@@ -195,7 +195,7 @@ namespace SistemaVendasAplication.Controllers
                 {
                     throw new ArgumentNullException("Id do Funcionário é nulo ou está vazio");
                 }
-                else if (await _context.Employee.AnyAsync(e => e.Id.ToString().Contains(id.ToString())) == false)
+                else if (await _context.Employee.AnyAsync(e => e.Id == id) == false)
                 {
                     throw new ArgumentException("Fucionário não existe");
                 }

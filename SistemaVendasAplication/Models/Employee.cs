@@ -13,7 +13,7 @@ namespace SistemaVendasAplication.Models
         [StringLength(200, MinimumLength = 4, ErrorMessage = "Minimo de 2 caracteris e o maximo de 200 caracteris")]
         public string Name { get; set; }
 
-        [StringLength(50, MinimumLength = 2, ErrorMessage = "Minimo de 2 caracteris e o máximo de 10 caracteris")]
+        [MaxLength(ErrorMessage = "Maximo de 50 caracteris")]
         public string? ShortName { get; set; }
 
         [DataType(DataType.Date)]
@@ -67,9 +67,6 @@ namespace SistemaVendasAplication.Models
         [MaxLength(300, ErrorMessage = "Numero maximo de caracteris é 300")]
         public string Complement { get; set; }
 
-        [Required(ErrorMessage = "A Lista de aturização é obrigatório")]
-        public List<string> Authorizations { get; set; }
-
         [Required(ErrorMessage = "Função é obrigatória!")]
         [MaxLength(150, ErrorMessage = "O maximo de caracteris é 150")]
         [MinLength(2, ErrorMessage = "Minimo de caracteris é 2")]
@@ -79,5 +76,8 @@ namespace SistemaVendasAplication.Models
         {
             Id = Guid.NewGuid();
         }
+
+        [JsonIgnore]    
+        public User? User { get; set; }
     }
 }

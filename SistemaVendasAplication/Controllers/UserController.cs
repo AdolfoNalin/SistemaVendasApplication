@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using SistemaVendasAplication.Data;
+using SistemaVendasAplication.Helpers;
 using SistemaVendasAplication.Models;
 using SistemaVendasAplication.Service;
 
@@ -15,7 +18,6 @@ namespace SistemaVendasAplication.Controllers
 {
     [ApiController]
     [Route("api/[Controller]")]
-    [Authorize]
     public class UserController : Controller
     {
         private SysComAppDBContext _context;
@@ -41,9 +43,9 @@ namespace SistemaVendasAplication.Controllers
                 User user = await _context.User.Where<User>(u => u.Login.ToUpper().Contains(userLogin.Login.ToUpper())).FirstOrDefaultAsync()
                 ?? throw new ArgumentNullException("Login Inválido!");
 
-                //string passwordGeneration = Helpers.GenerationPassword.Generation(user.Password);
+                string hashPasword = GenerationPassword.Generation(userLogin.Password);
 
-                if (!user.Password.Equals(userLogin.Password))
+                if (!user.Password.Equals(hashPasword))
                 {
                     throw new InvalidOperationException("Senha incorreta");
                 }
@@ -70,7 +72,7 @@ namespace SistemaVendasAplication.Controllers
 
         #region GetAll
         [HttpGet]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> Get()
         {
             try
@@ -92,6 +94,32 @@ namespace SistemaVendasAplication.Controllers
         }
         #endregion
 
+        #region GetPassword
+        [HttpGet("Password")]
+        public async Task<IActionResult> GetPassword([FromQuery] string Password)
+        {
+            try
+            {
+                UserResponse userResponse = new UserResponse();
+
+                userResponse.user = _context.User.Where(u => u.Password.Contains(Password)).ToList().FirstOrDefault()
+                ?? throw new ArgumentNullException("Usuário não encontrado");
+
+                userResponse.Token = _token.GeneratorToken(userResponse.user);
+
+                return Ok(userResponse);
+            }
+            catch(ArgumentNullException ane)
+            {
+                return NotFound(ane.ParamName);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest($"{ex.Message}, {ex.StackTrace}, {ex.HelpLink}");
+            }
+        }
+        #endregion
+
         #region GetId
         [HttpGet("Search/{id}")]
         [Authorize]
@@ -107,6 +135,28 @@ namespace SistemaVendasAplication.Controllers
             catch (ArgumentException ae)
             {
                 return NotFound(ae.Message);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest($"{ex.Message}, {ex.StackTrace}, {ex.HelpLink}");
+            }
+        }
+        #endregion
+
+        #region GetEmployeeId
+        [HttpGet("Employee/{employeeId}")]
+        public async Task<IActionResult> GetEmployeeId([FromRoute] Guid employeeId)
+        {
+            try
+            {
+                User user = await _context.User.Where(u => u.EmployeeId.ToString().Contains(employeeId.ToString())).FirstOrDefaultAsync()
+                ?? throw new ArgumentNullException("Nenhum Funcionário não encontrado!");
+
+                return Ok(user);
+            }
+            catch (ArgumentNullException ane)
+            {
+                return NotFound(ane.Message);
             }
             catch (System.Exception ex)
             {
@@ -141,7 +191,7 @@ namespace SistemaVendasAplication.Controllers
 
         #region Post
         [HttpPost]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> Post([FromBody] User user)
         {
             try
@@ -158,6 +208,7 @@ namespace SistemaVendasAplication.Controllers
                 else if (await _context.User.AnyAsync(u => u.Id.ToString().Contains(user.Id.ToString()) ||
                 u.Name.ToUpper().Contains(user.Name.ToUpper())) == false && user != null)
                 {
+                    user.Password = GenerationPassword.Generation(user.Password);
                     await _context.User.AddAsync(user);
                     int value = await _context.SaveChangesAsync();
 
@@ -181,7 +232,7 @@ namespace SistemaVendasAplication.Controllers
             }
             catch (System.Exception ex)
             {
-                return BadRequest($"{ex.Message}, {ex.StackTrace}, {ex.HelpLink}");
+                return BadRequest($"{ex.Data}, {ex.Message}, {ex.StackTrace}, {ex.HelpLink}");
             }
         }
         #endregion
@@ -229,7 +280,7 @@ namespace SistemaVendasAplication.Controllers
 
         #region Delete
         [HttpDelete("{id}")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             try

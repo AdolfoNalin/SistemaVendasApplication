@@ -117,6 +117,31 @@ namespace SistemaVendasAplication.Controllers
         }
         #endregion
 
+        #region GetDate
+        [HttpGet("Date")]
+        public async Task<IActionResult> Get([FromQuery] DateTime startDate, DateTime endDate)
+        {
+            try
+            {
+                DateTime start = DateTime.SpecifyKind(startDate, DateTimeKind.Utc);
+                DateTime end = DateTime.SpecifyKind(endDate, DateTimeKind.Utc);
+
+                List<Budget> budgets = await _context.Budget.Where(b => b.Date.Date >= start.Date.Date && b.Date.Date <= end.Date.Date).ToListAsync()
+                ?? throw new ArgumentNullException("Não foi encontrado nenhum orçamento nestas datas");
+
+                return Ok(budgets);
+            }
+            catch(ArgumentNullException ane)
+            {
+                return NotFound(ane.ParamName);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"{ex.Message}, {ex.StackTrace}, {ex.HelpLink}");
+            }
+        }
+        #endregion
+
         #region Post
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Budget budget)
@@ -138,11 +163,11 @@ namespace SistemaVendasAplication.Controllers
 
                     if (value == 1)
                     {
-                        return Ok("Orçamento cadastrado com sucesso!");
+                        return Ok(true);
                     }
                     else
                     {
-                        return BadRequest("O orçamento não foi salvo. Verifique os dados!");
+                        return BadRequest(false);
                     }
                 }
                 else
@@ -203,7 +228,7 @@ namespace SistemaVendasAplication.Controllers
         #endregion
 
         #region Delete
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             try

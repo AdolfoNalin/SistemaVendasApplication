@@ -12,25 +12,22 @@ namespace SistemaVendasAplication.Models
         [StringLength(200, MinimumLength = 4, ErrorMessage = "Minimo de 2 caracteris e o maximo de 200 caracteris")]
         public string Name { get; set; }
 
-        [StringLength(50, MinimumLength = 2, ErrorMessage = "Minimo de 2 caracteris e o máximo de 10 caracteris")]
-        public string? ShotName { get; set; }
-
-        [DataType(DataType.Date)]
-        public DateTime DueDate { get; set; }
-
         [MaxLength(200, ErrorMessage = "O Maximo de caracteris é 200")]
         [MinLength(2, ErrorMessage = "O minimo de caracteris é 2")]
         public string CompanyName { get; set; }
 
-        [Required(ErrorMessage = "O Campo CPF é obrigatório!")]
-        [MinLength(14,ErrorMessage = "Minimo de 14 caracteris")]
-        [MaxLength(ErrorMessage = "Maximo de 14 caracteris")]
-        public string CPF { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime DueDate { get; set; }
 
         [Required(ErrorMessage = "CNPJ é obrigatório")]
         [MinLength(18, ErrorMessage = "Minimo de 18 caracteris")]
-        [MaxLength(ErrorMessage = "Maximo de 18 caracteris")]
+        [MaxLength(18,ErrorMessage = "Maximo de 18 caracteris")]
         public string CNPJ { get; set; }
+
+        [Required(ErrorMessage = "IE é obrigatório")]
+        [MaxLength(15, ErrorMessage = "Maximo de 15 Caracteris")]
+        [MinLength(15,ErrorMessage = "Minimo de 15 caracteris")]
+        public string IE { get; set; }
 
         [DataType(DataType.EmailAddress)]
         public string? Email { get; set; }
@@ -61,8 +58,11 @@ namespace SistemaVendasAplication.Models
         public string Neighborhoods { get; set; }
 
         [Required(ErrorMessage = "Estado é obrigatório")]
-        [StringLength(150, MinimumLength = 3, ErrorMessage = "O minino de caracteris é 2 e o maximo é 150")]
+        [StringLength(150, MinimumLength = 2, ErrorMessage = "O minino de caracteris é 2 e o maximo é 150")]
         public string State { get; set; }
+
+        [MaxLength(500, ErrorMessage = "O maximo de caracteris é de 500")]
+        public string Complement { get; set; }
 
         public Supplier()
         {

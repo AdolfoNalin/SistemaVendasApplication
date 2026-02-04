@@ -9,12 +9,21 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SistemaVendasAplication.Models
 {
-    public enum IsCashDesck
+    public enum Enable
     {
-        close = 1,
-        Open
+        Enable,
+        Disabel,
+        Habilitado,
+        Desabilitado
     }
-    public class CashDesck
+
+    public enum IsCashSession
+    {
+        Open,
+        close,
+    }
+
+    public class CashSession
     {
         [Key]
         public Guid Id { get; set; }
@@ -30,12 +39,15 @@ namespace SistemaVendasAplication.Models
         public decimal OpeningAmount  { get; set; }
 
         [Required(ErrorMessage = "É necessário o Status")]
-        public IsCashDesck Status { get; set; }
+        public IsCashSession Status { get; set; }
+
+        [Required(ErrorMessage = "Qual é o status do Caixa")]
+        public Enable Enable { get; set; }
 
         [Required(ErrorMessage = "É necessário o total")]
         public decimal Total { get; set; }
 
-        public CashDesck()
+        public CashSession()
         {
             Id = Guid.NewGuid();
         }

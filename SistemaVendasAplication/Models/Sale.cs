@@ -4,6 +4,11 @@ using System.Text.Json.Serialization;
 
 namespace SistemaVendasAplication.Models
 {
+    public enum OpenOrClose
+    {
+        Open,
+        Close
+    }
     public class Sale 
     {
         [Key]
@@ -43,6 +48,14 @@ namespace SistemaVendasAplication.Models
 
         [Required(ErrorMessage = "É necessário a data!")]
         public DateTime Date { get; set; }
+
+        [Required(ErrorMessage = "É necessário a data de Vencimento")]            
+        public DateTime ExpirationDate { get; set; }
+
+        public int MyProperty { get; set; }
+
+        [Required(ErrorMessage = "Aber ou fechado")]
+        public OpenOrClose Open { get; set; }
 
         public Sale()
         {

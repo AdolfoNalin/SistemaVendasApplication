@@ -168,6 +168,9 @@ namespace SistemaVendasAplication.Migrations
                     b.Property<decimal>("Credit")
                         .HasColumnType("numeric");
 
+                    b.Property<decimal>("CreditLimit")
+                        .HasColumnType("numeric");
+
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -499,10 +502,19 @@ namespace SistemaVendasAplication.Migrations
                     b.Property<Guid>("EmployeeId")
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("MyProperty")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Observation")
                         .IsRequired()
                         .HasMaxLength(300)
                         .HasColumnType("character varying(300)");
+
+                    b.Property<int>("Open")
+                        .HasColumnType("integer");
 
                     b.Property<string>("PaymentMethod")
                         .IsRequired()

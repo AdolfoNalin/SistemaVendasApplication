@@ -19,6 +19,7 @@ namespace SistemaVendasAplication.Service
             _configuration = configuration;
         }
 
+        #region GeneratorToken
         public string GeneratorToken(User user)
         {
             try
@@ -32,7 +33,7 @@ namespace SistemaVendasAplication.Service
                          new Claim[]
                          {
                         new Claim(ClaimTypes.NameIdentifier, user.Login.ToString()),
-                        new Claim(ClaimTypes.Role, user.Function.ToString()),
+                        new Claim(ClaimTypes.Role, user.EmployeeId.ToString()),
                          }),
                     Expires = DateTime.UtcNow.AddHours(2),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -46,5 +47,6 @@ namespace SistemaVendasAplication.Service
                 return $"{ex.Message}, {ex.StackTrace}, {ex.HelpLink}";
             }
         }
+        #endregion
     }
 }

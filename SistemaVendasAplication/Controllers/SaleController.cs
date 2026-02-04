@@ -45,6 +45,29 @@ namespace SistemaVendasAplication.Controllers
         }
         #endregion
 
+        #region GetOrderOpen
+        [HttpGet("OrderOpen/{ClientId}")]
+        public async Task<IActionResult> GetOrderOpen([FromRoute] Guid clientId)
+        {
+            try
+            {
+                List<Sale> sales = await _context.Sale.Where(s => s.ClientId == clientId
+                && s.Open == OpenOrClose.Open).ToListAsync()
+                ?? throw new ArgumentNullException("Nenhuma nota foi encontrada!");
+
+                return Ok(sales);
+            }
+            catch(ArgumentNullException ane)
+            {
+                return NotFound(ane.ParamName);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"{ex.Message}, {ex.StackTrace}, {ex.HelpLink}");
+            }
+        }
+        #endregion
+
         #region LastSale
         [HttpGet("Last")]
         public async Task<IActionResult> LastSale()
@@ -90,7 +113,7 @@ namespace SistemaVendasAplication.Controllers
         }
         #endregion
 
-        #region GetSaleId
+        #region GetCash
         [HttpGet("CashSession/{cashId}")]
         public async Task<IActionResult> GetCash([FromRoute] Guid cashId)
         {
@@ -150,15 +173,15 @@ namespace SistemaVendasAplication.Controllers
 
         #region GetDate
         [HttpGet("Date")]
-        public async Task<IActionResult> Get([FromQuery] string startDate, string endDate)
+        public async Task<IActionResult> Get([FromQuery] DateTime startDate, DateTime endDate)
         {
-            string convertStartDate = String.Format("yyyy/MM/dd");
-            string convertEndDate = String.Format("yyyy/MM/dd");
-
             try
             {
-                List<Sale> sales = await _context.Sale.Where(s => s.Date.ToString().Contains(convertStartDate)
-                && s.Date.Date.ToString().Contains(convertEndDate)).ToListAsync()
+                DateTime start = DateTime.SpecifyKind(startDate, DateTimeKind.Utc);
+                DateTime end = DateTime.SpecifyKind(endDate, DateTimeKind.Utc);
+
+                List<Sale> sales = await _context.Sale.Where(s => s.Date.Date >= start.Date
+                && s.Date.Date <= end.Date).ToListAsync()
                 ?? throw new ArgumentNullException("Nenhuma venda foi encontrada neste período");
 
                 return Ok(sales);
@@ -260,6 +283,55 @@ namespace SistemaVendasAplication.Controllers
                 return BadRequest($"{ex.Message}, {ex.StackTrace}, {ex.HelpLink}");
             }
         }
+        #endregion
+
+        #region Put
+        [HttpPut("PayOff")]
+
+        public async Task<IActionResult> PutPayOff([FromBody] Sale sale)
+        {
+            try
+            {
+                if(sale is null)
+                {
+                    throw new ArgumentNullException("Id guid está vázio");
+                }
+                else if(await _context.Sale.AnyAsync(s => s.Id == sale.Id))
+                {
+                    sale.Open = OpenOrClose.Close;
+
+                    _context.Sale.Update(sale);
+                    int value = await _context.SaveChangesAsync();
+
+                    if(value == 1)
+                    {
+                        return Ok(true);
+                    }
+                    else
+                    {
+                        return BadRequest("Aconteceu um erro ao salvar");
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException("Venda não foi encontrada");
+                }
+            }
+            catch(ArgumentNullException ane)
+            {
+                return NotFound(ane.ParamName);
+            }
+            catch(ArgumentException ae)
+            {
+                return NotFound(ae.Message);
+                
+            }
+            catch(Exception ex)
+            {
+                return BadRequest($"{ex.Message}, {ex.StackTrace}, {ex.HelpLink}");
+            }
+        }
+
         #endregion
 
         #region Delete

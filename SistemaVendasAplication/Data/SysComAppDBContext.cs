@@ -16,6 +16,8 @@ namespace SistemaVendasAplication.Data
         public DbSet<ItemReturn> ItemReturn { get; set; }
         public DbSet<User> User { get; set; }
         public DbSet<Return> Return { get; set; }
+        public DbSet<CashSession> CashSession { get; set; }
+        public DbSet<CashMoviment> CashMoviment { get; set; }
 
         public SysComAppDBContext(DbContextOptions<SysComAppDBContext> options) : base(options)
         {

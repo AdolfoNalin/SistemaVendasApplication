@@ -74,14 +74,14 @@ namespace SistemaVendasAplication.Controllers
         {
             try
             {
-                if (value is null || value == String.Empty)
+                if (String.IsNullOrEmpty(value))
                 {
                     throw new ArgumentNullException("Arguemnto nulo");
                 }
                 else
                 {
-                    List<Supplier> suppliers = await _context.Supplier.Where<Supplier>(s => s.Name.ToUpper().Contains(value.ToUpper()) || s.ShotName.ToUpper().Contains(value.ToUpper())
-                    || s.CNPJ.Contains(value) || s.CPF.Contains(value)).OrderBy(s => s.Name).ToListAsync() ??
+                    List<Supplier> suppliers = await _context.Supplier.Where<Supplier>(s => s.Name.ToUpper().Contains(value.ToUpper()) || s.CompanyName.ToUpper().Contains(value.ToUpper())
+                    || s.CNPJ.Contains(value)).OrderBy(s => s.Name).ToListAsync() ??
                     throw new ArgumentException("Lista está nula");
 
                     return Ok(suppliers);
@@ -109,12 +109,12 @@ namespace SistemaVendasAplication.Controllers
                     throw new ArgumentNullException("Fornecedor é nulo");
                 }
                 else if (await _context.Supplier.AnyAsync(s => s.Id.ToString().Contains(supplier.Id.ToString()) || s.CompanyName.ToUpper().Contains(supplier.CompanyName.ToUpper())
-                || s.CPF.Contains(supplier.CPF) || s.CNPJ.Contains(supplier.CNPJ)))
+                || s.CNPJ.Contains(supplier.CNPJ)))
                 {
                     throw new ArgumentException("Fornecedor existente no banco de dados.");
                 }
                 else if (await _context.Supplier.AnyAsync(s => s.Id.ToString().Contains(supplier.Id.ToString()) || s.CompanyName.ToUpper().Contains(supplier.CompanyName.ToUpper())
-                || s.CPF.Contains(supplier.CPF) || s.CNPJ.Contains(supplier.CNPJ)) == false
+                || s.CNPJ.Contains(supplier.CNPJ)) == false
                 && supplier != null)
                 {
                     supplier.DueDate = supplier.DueDate.ToUniversalTime();
@@ -161,12 +161,12 @@ namespace SistemaVendasAplication.Controllers
                     throw new ArgumentNullException("Funcionário é nulo");
                 }
                 else if (await _context.Supplier.AnyAsync(s => s.Id.ToString().Contains(supplier.Id.ToString()) || s.CompanyName.ToUpper().Contains(supplier.CompanyName.ToUpper())
-                || s.CPF.Contains(supplier.CPF) || s.CNPJ.Contains(supplier.CNPJ)) == false)
+                || s.CNPJ.Contains(supplier.CNPJ)) == false)
                 {
                     throw new ArgumentException("Funcionário não existente no banco de dados.");
                 }
                 else if (await _context.Supplier.AnyAsync(s => s.Id.ToString().Contains(supplier.Id.ToString()) || s.CompanyName.ToUpper().Contains(supplier.CompanyName.ToUpper())
-                || s.CPF.Contains(supplier.CPF) || s.CNPJ.Contains(supplier.CNPJ))
+                || s.CNPJ.Contains(supplier.CNPJ))
                 && supplier != null)
                 {
                     supplier.DueDate = supplier.DueDate.ToUniversalTime();

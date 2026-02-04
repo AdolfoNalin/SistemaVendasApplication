@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.TagHelpers.Cache;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ namespace SistemaVendasAplication.Controllers
 {
     [ApiController]
     [Route("api/[Controller]")]
+    [Authorize]
     public class ReturnController : Controller
     {
         private readonly SysComAppDBContext _context;
@@ -112,11 +114,11 @@ namespace SistemaVendasAplication.Controllers
 
                     if (value == 1)
                     {
-                        return Ok("Devolução cadastrada com Sucesso!");
+                        return Ok(true);
                     }
                     else
                     {
-                        return BadRequest("Devolução não cadastrada!");
+                        return BadRequest(false);
                     }
                 }
             }

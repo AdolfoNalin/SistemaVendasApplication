@@ -23,31 +23,29 @@ namespace SistemaVendasAplication.Controllers
         }
 
         #region GetIdItens
-        [HttpGet("product")]
-        public async Task<IActionResult> Get([FromQuery] Guid idBudget, Guid? idProduct)
+        [HttpGet("{idBudget}")]
+        public async Task<IActionResult> Get([FromRoute] Guid idBudget)
         {
             try
-            {
-                List<ItemBudget> budgets = await _context.ItemBudget.Where(i => i.BudgetId.ToString().Contains(idBudget.ToString())).ToListAsync()
-                ?? throw new ArgumentNullException("Orçamento não existe");
-
-                if (idProduct.ToString() == String.Empty)
+            { 
+                List<ItemBudget> itens = new List<ItemBudget>();
+                if(idBudget == Guid.Empty)
                 {
-                    return Ok(budgets);
+                    throw new ArgumentNullException("É necessário um Orçamento");
                 }
                 else
                 {
-                    List<ItemBudget> itens = budgets.Where(i => i.ProductId.ToString().Contains(idProduct.ToString())).ToList()
-                    ?? throw new ArgumentNullException("Arguemnto NULO", "Produto não existe");
-
+                    itens = await _context.ItemBudget.Where(i => i.BudgetId == idBudget).ToListAsync()
+                    ?? throw new ArgumentNullException("Nenhum item encontrado");
                     return Ok(itens);
                 }
+
             }
-            catch (ArgumentNullException ane) when (idBudget.ToString() == String.Empty || idProduct.ToString() == String.Empty)
+            catch(ArgumentException ane)
             {
                 return NotFound(ane.Message);
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 return BadRequest($"{ex.Message}, {ex.StackTrace}, {ex.HelpLink}");
             }
